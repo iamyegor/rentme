@@ -13,8 +13,11 @@ export default function Layout() {
           >
             #RENTME
           </Link>
+          <Link to="/how-it-works" data-testid="how-it-works-link">
+            How it works?
+          </Link>
           <Link className="nav-item" to="/cars" data-testid="cars-link">
-            Cars
+            cars
           </Link>
         </div>
         <div className="flex space-x-8">
