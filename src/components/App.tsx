@@ -8,7 +8,7 @@ const router = createBrowserRouter(routes);
 
 export default function App() {
   return (
-    <Theme>
+    <Theme className="flex flex-col h-full">
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>

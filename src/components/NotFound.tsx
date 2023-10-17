@@ -7,7 +7,7 @@ export default function NotFound() {
   };
 
   return (
-    <main>
+    <main data-testid="not-found-page" className="flex-1">
       <Error error={error} />
     </main>
   );
