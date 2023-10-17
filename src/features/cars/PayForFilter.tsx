@@ -8,12 +8,16 @@ export default function PayForFilter() {
 
   return (
     <div className="flex items-center bg-gray-100 p-2 shadow rounded-md">
-      <span className="mr-3">Pay for</span>
+      <div className="mr-3">Pay for</div>
       <Select.Root
-        defaultValue={PayFor.Minute}
         onValueChange={(value: PayFor) => dispatch(changePayFor(value))}
       >
-        <Select.Trigger color="green" variant="ghost" className="font-semibold" />
+        <Select.Trigger
+          color="green"
+          variant="ghost"
+          className="font-semibold"
+          data-testid="pay-for-dropdown"
+        />
         <Select.Content color="green">
           <Select.Group>
             <Select.Item value={PayFor.Hour}>Hour</Select.Item>

@@ -19,7 +19,10 @@ export default function CarsPage() {
   return (
     <main className="flex flex-col items-center" data-testid="cars-page">
       <React.Suspense fallback={<div data-testid="spinner">Loading...</div>}>
-        <div className="my-4 flex justify-center w-full">
+        <div className="my-4 flex justify-center items-center space-x-4 w-full">
+          <div>
+            Choose you location
+          </div>
           <PayForFilter />
         </div>
         <Await resolve={cars} errorElement={<AsyncErrorPage />}>

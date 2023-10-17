@@ -1,4 +1,4 @@
-import { Car, PayFor } from "../../types";
+import { Car } from "../../types";
 import CarItem from "./CarItem";
 
 type CarsGridProps = {

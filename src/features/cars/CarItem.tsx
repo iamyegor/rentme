@@ -33,7 +33,7 @@ export default function CarItem({ car }: CarItemProps) {
           {car.make} {car.model}, {car.year}
         </span>
         <div>
-          <span className="text-green-500 font-semibold">${price}</span>
+          <span className="text-green-500 font-semibold" data-testid="car-price">${price}</span>
           <span className="font-semibold">
             {" "}
             / {payFor === PayFor.Hour ? "hour" : "min"}
