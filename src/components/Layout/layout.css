@@ -1,0 +1,3 @@
+.nav-item {
+  @apply hover:text-gray-600 transition active:scale-110;
+}
