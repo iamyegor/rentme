@@ -3,7 +3,7 @@ export type Car = {
   make: string;
   model: string;
   year: number;
-  price: number;
+  minutePriceCents: number;
   imageUrl: string;
 };
 
@@ -11,3 +11,8 @@ export type ErrorWithStatus = {
   status: number;
   message: string;
 };
+
+export enum PayFor {
+  Hour = "hour",
+  Minute = "min",
+}

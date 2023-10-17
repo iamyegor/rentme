@@ -3,14 +3,17 @@ import { Provider } from "react-redux";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { setupStore } from "../../app/store";
 import routes from "../../routes";
+import { Theme } from "@radix-ui/themes";
 
-export default function renderWithRouterAndProvider(route: string) {
+export default function renderRouteInAppContext(route: string) {
   const router = createMemoryRouter(routes, { initialEntries: [route] });
-  const store = setupStore()
+  const store = setupStore();
 
   render(
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <Theme>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </Theme>
   );
 }

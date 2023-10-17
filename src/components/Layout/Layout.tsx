@@ -32,6 +32,9 @@ export default function Layout() {
           </Link>
         </div>
       </nav>
+      <div className="bg-gray-500">
+
+      </div>
       <Outlet />
     </>
   );
