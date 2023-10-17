@@ -1,9 +1,10 @@
+import NotFound from "components/NotFound.tsx";
 import Layout from "./components/Layout/Layout";
 import CarsPage, {
   loader as carsLoader,
 } from "./features/cars/CarsPage/CarsPage.tsx";
 import HomePage from "./features/home/HomePage.tsx";
-import Error from "./components/Error/Error.tsx";
+import ErrorPage from "components/ErrorPage.tsx";
 
 export default [
   {
@@ -18,7 +19,11 @@ export default [
         path: "cars",
         element: <CarsPage />,
         loader: carsLoader,
-        errorElement: <Error />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "*",
+        element: <NotFound />,
       },
     ],
   },

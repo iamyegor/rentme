@@ -4,7 +4,7 @@ import { store } from "../../../app/store.ts";
 import { Car } from "../../../types.ts";
 import { getCarsInitiate } from "../../api/apiSlice.ts";
 import CarsGrid from "../CarsGrid.tsx";
-import AsyncError from "../../../components/AsyncError/AsyncError.tsx";
+import AsyncErrorPage from "../../../components/AsyncErrorPage.tsx";
 
 export async function loader() {
   const promise = store.dispatch(getCarsInitiate());
@@ -18,7 +18,7 @@ export default function CarsPage() {
   return (
     <main className="flex justify-center" data-testid="cars-page">
       <React.Suspense fallback={<div data-testid="spinner">Loading...</div>}>
-        <Await resolve={cars} errorElement={<AsyncError />}>
+        <Await resolve={cars} errorElement={<AsyncErrorPage />}>
           {(cars: Car[]) => <CarsGrid cars={cars} />}
         </Await>
       </React.Suspense>
