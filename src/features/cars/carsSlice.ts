@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { PayFor } from "../../types";
+import { PayFor } from "types";
 
 type StoreState = {
   cars: CarsState;

@@ -1,19 +1,19 @@
-﻿import { screen } from "@testing-library/react";
+﻿import {screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { rest } from "msw";
-import { expect } from "vitest";
-import carsFixture from "../../../test/fixtures/carsFixture.ts";
-import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
-import { server } from "../../../test/setup.ts";
-import mockSuccessfulResponse from "test/helpers/mockSuccessfulResponse.tsx";
 import mockFailedResponse from "test/helpers/mockFailedResponse.tsx";
+import mockSuccessfulResponse from "test/helpers/mockSuccessfulResponse.tsx";
+import {expect} from "vitest";
+import carsFixture from "test/fixtures/carsFixture.ts";
+import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
+import {server} from "test/setup.ts";
+import {rest} from "msw";
 
 // radix UI appears to use ResizeObserver, which is not available in jsdom,
 // so we have to mock it to get through the tests.
 global.ResizeObserver = require("resize-observer-polyfill");
 
 describe("CarsPage", () => {
-  it("renders cars list once loaded", async () => {
+  it("displays cars list once loaded", async () => {
     mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
@@ -22,7 +22,7 @@ describe("CarsPage", () => {
     expect(catItems.length).toBe(2);
   });
 
-  it("renders an error message when the request fails", async () => {
+  it("displays an error message when the request fails", async () => {
     mockFailedResponse("/api/cars", 500);
     renderRouteInAppContext("/cars");
     expect(screen.queryByTestId("error")).toEqual(null);
@@ -59,5 +59,37 @@ describe("CarsPage", () => {
 
     expect(carPrices[0]).toHaveTextContent("$27");
     expect(carPrices[1]).toHaveTextContent("$60");
+  });
+
+  it("displays cars for the selected location, when user selects location", async () => {
+    server.use(
+      rest.get("http://localhost/api/cars", (req, res, ctx) => {
+        const city = req.url.searchParams.get("city");
+        const country = req.url.searchParams.get("country");
+
+        let matchedCars;
+        if (city === "Moscow" && country === "Russia") {
+          matchedCars = [carsFixture[0]];
+        } else {
+          matchedCars = carsFixture;
+        }
+
+        return res(ctx.json(matchedCars));
+      }),
+    );
+
+    renderRouteInAppContext("/cars");
+
+    await screen.findAllByTestId("car-item");
+
+    const locationButton = screen.getByTestId("select-location-button");
+    await userEvent.click(locationButton);
+    await userEvent.click(screen.getByText("Moscow"));
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("car-item").length).toBe(1);
+    });
+
+    expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
   });
 });

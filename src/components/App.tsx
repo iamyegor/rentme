@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import routes from "../routes.tsx";
-import { store } from "../app/store.ts";
+import routes from "routes.tsx";
+import { store } from "app/store.ts";
 import { Provider } from "react-redux";
 import { Theme } from "@radix-ui/themes";
 

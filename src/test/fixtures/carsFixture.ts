@@ -10,6 +10,10 @@ export default [
     color: "red",
     minutePriceCents: 45,
     imageUrl: fordFusionHybrid,
+    location: {
+      country: "Russia",
+      city: "Moscow",
+    },
   },
   {
     id: 2,
@@ -19,5 +23,9 @@ export default [
     color: "blue",
     minutePriceCents: 100,
     imageUrl: teslaS,
+    location: {
+      country: "USA",
+      city: "New York",
+    },
   },
 ];

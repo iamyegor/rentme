@@ -25,8 +25,10 @@ export default function Error({ error }: ErrorProps) {
           src={stop}
         />
         <div className="ml-4 z-10 relative">
-          <div className="font-semibold text-[100px]">Error 
-          <span className="text-green-600">{error.status}</span></div>
+          <div className="font-semibold text-[100px]">
+            Error
+            <span className="text-green-600"> {error.status}</span>
+          </div>
           <div className="line-clamp-5 text-[1.5rem] -mt-6">
             {error.message}
           </div>

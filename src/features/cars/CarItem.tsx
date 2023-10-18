@@ -1,16 +1,16 @@
-import { useAppSelecter } from "app/hooks";
-import { Car, PayFor } from "../../types";
-import { selectPayFor } from "./carsSlice";
+import { Car, PayFor } from "types";
+import { useSearchParams } from "react-router-dom";
 
 type CarItemProps = {
   car: Car;
 };
 
 export default function CarItem({ car }: CarItemProps) {
-  const payFor = useAppSelecter((state) => selectPayFor(state));
+  const [searchParams, _] = useSearchParams();
+  const payForFilter = searchParams.get("payFor");
 
   let price: number = car.minutePriceCents;
-  if (payFor === PayFor.Hour) {
+  if (payForFilter === PayFor.Hour) {
     price = car.minutePriceCents * 60;
   }
   price = price / 100;
@@ -29,14 +29,19 @@ export default function CarItem({ car }: CarItemProps) {
         hover:scale-[1.05] transition-all duration-300"
       />
       <div className="flex justify-between items-center w-full pl-8 pr-8">
-        <span className="font-semibold text-lg max-w-[230px]">
+        <div className="font-semibold text-lg max-w-[230px]">
           {car.make} {car.model}, {car.year}
-        </span>
+        </div>
         <div>
-          <span className="text-green-500 font-semibold" data-testid="car-price">${price}</span>
+          <span
+            className="text-green-500 font-semibold"
+            data-testid="car-price"
+          >
+            ${price}
+          </span>
           <span className="font-semibold">
             {" "}
-            / {payFor === PayFor.Hour ? "hour" : "min"}
+            / {payForFilter === PayFor.Hour ? "hour" : "min"}
           </span>
         </div>
       </div>

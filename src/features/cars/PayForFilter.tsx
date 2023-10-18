@@ -1,21 +1,31 @@
 import { Select } from "@radix-ui/themes";
-import { useAppDispatch } from "app/hooks";
 import { PayFor } from "types";
-import { changePayFor } from "./carsSlice";
+import { useSearchParams } from "react-router-dom";
+import { appendSearchParam } from "utils/appendSearchParam.ts";
+import clock from "../../../assets/icons/clock.png";
 
 export default function PayForFilter() {
-  const dispatch = useAppDispatch();
+  const [_, setSearchParams] = useSearchParams();
 
   return (
-    <div className="flex items-center bg-gray-100 p-2 shadow rounded-md">
+    <div className="flex items-center filter-item">
+      <img className="filter-icon mr-2" src={clock} alt={""} />
       <div className="mr-3">Pay for</div>
       <Select.Root
-        onValueChange={(value: PayFor) => dispatch(changePayFor(value))}
+        defaultValue={PayFor.Minute}
+        onValueChange={(value: PayFor) =>
+          appendSearchParam(
+            {
+              key: "payFor",
+              value,
+            },
+            setSearchParams,
+          )
+        }
       >
         <Select.Trigger
           color="green"
-          variant="ghost"
-          className="font-semibold"
+          className="font-medium cursor-pointer text-base"
           data-testid="pay-for-dropdown"
         />
         <Select.Content color="green">
