@@ -5,14 +5,14 @@ import { appendSearchParam } from "utils/appendSearchParam.ts";
 import clock from "../../../assets/icons/clock.png";
 
 export default function PayForFilter() {
-  const [_, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   return (
     <div className="flex items-center filter-item">
       <img className="filter-icon mr-2" src={clock} alt={""} />
       <div className="mr-3">Pay for</div>
       <Select.Root
-        defaultValue={PayFor.Minute}
+        defaultValue={searchParams.get("payFor") || PayFor.Minute}
         onValueChange={(value: PayFor) =>
           appendSearchParam(
             {
