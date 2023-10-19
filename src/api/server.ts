@@ -1,5 +1,6 @@
 import { rest, setupWorker } from "msw";
 import { cars } from "./data";
+import { Location } from "../types.ts";
 
 const worker = setupWorker(
   rest.get("http://localhost/api/cars", (req, res, ctx) => {
@@ -16,6 +17,15 @@ const worker = setupWorker(
 
     return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(500));
     // return res(ctx.status(500), ctx.json("Not found"), ctx.delay(1000));
+  }),
+
+  rest.get("http://localhost/api/locations", (_req, res, ctx) => {
+    let locations: Location[] = [];
+    for (const car of cars) {
+      locations.push(car.location);
+    }
+
+    return res(ctx.status(200), ctx.json(locations), ctx.delay(500));
   }),
 );
 

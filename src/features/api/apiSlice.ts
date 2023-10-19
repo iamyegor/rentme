@@ -11,10 +11,13 @@ export const apiSlice = createApi({
       query: (location) =>
         `/cars?city=${location.city}&country=${location.country}`,
     }),
+    getLocations: builder.query<Location[], void>({
+      query: () => `/locations`,
+    }),
   }),
 });
 
-export const { useGetCarsQuery } = apiSlice;
 export const getCarsInitiate = apiSlice.endpoints.getCars.initiate;
+export const { useGetLocationsQuery } = apiSlice;
 export const getCarsByLocationInitiate =
   apiSlice.endpoints.getCarsByLocation.initiate;

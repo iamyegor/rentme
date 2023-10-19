@@ -29,8 +29,12 @@
     @apply bg-gray-100 p-2 shadow rounded-md h-[45px] font-medium text-base;
     font-family: "Inter", sans-serif;
   }
-  
+
   .filter-icon {
     @apply w-4 h-4;
+  }
+
+  .basic-font {
+    font-family: "Inter", sans-serif;
   }
 }

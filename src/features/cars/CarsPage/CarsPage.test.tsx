@@ -1,20 +1,19 @@
-﻿import {screen, waitFor} from "@testing-library/react";
+﻿import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import mockFailedResponse from "test/helpers/mockFailedResponse.tsx";
 import mockSuccessfulResponse from "test/helpers/mockSuccessfulResponse.tsx";
-import {expect} from "vitest";
+import { beforeEach, expect } from "vitest";
 import carsFixture from "test/fixtures/carsFixture.ts";
 import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
-import {server} from "test/setup.ts";
-import {rest} from "msw";
+import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
 
-// radix UI appears to use ResizeObserver, which is not available in jsdom,
-// so we have to mock it to get through the tests.
-global.ResizeObserver = require("resize-observer-polyfill");
+beforeEach(() => {
+  mockSuccessfulResponse("/api/locations", []);
+  mockSuccessfulResponse("/api/cars", carsFixture);
+});
 
 describe("CarsPage", () => {
   it("displays cars list once loaded", async () => {
-    mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
     expect(screen.queryAllByTestId("car-item")).toEqual([]);
@@ -25,6 +24,7 @@ describe("CarsPage", () => {
   it("displays an error message when the request fails", async () => {
     mockFailedResponse("/api/cars", 500);
     renderRouteInAppContext("/cars");
+
     expect(screen.queryByTestId("error")).toEqual(null);
 
     const error = await screen.findByTestId("error");
@@ -32,7 +32,6 @@ describe("CarsPage", () => {
   });
 
   it("displays proper car prices when user selects a pay for minute option", async () => {
-    mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
     await screen.findAllByTestId("car-item");
@@ -47,7 +46,6 @@ describe("CarsPage", () => {
   });
 
   it("displays proper car prices when user selects a pay for hour option", async () => {
-    mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
     await screen.findAllByTestId("car-item");
@@ -62,29 +60,18 @@ describe("CarsPage", () => {
   });
 
   it("displays cars for the selected location, when user selects location", async () => {
-    server.use(
-      rest.get("http://localhost/api/cars", (req, res, ctx) => {
-        const city = req.url.searchParams.get("city");
-        const country = req.url.searchParams.get("country");
-
-        let matchedCars;
-        if (city === "Moscow" && country === "Russia") {
-          matchedCars = [carsFixture[0]];
-        } else {
-          matchedCars = carsFixture;
-        }
-
-        return res(ctx.json(matchedCars));
-      }),
-    );
-
+    mockSuccessfulResponse("/api/locations", [
+      { city: "Moscow", country: "Russia" },
+    ]);
+    mockCarByLocationResponse();
     renderRouteInAppContext("/cars");
 
     await screen.findAllByTestId("car-item");
 
     const locationButton = screen.getByTestId("select-location-button");
     await userEvent.click(locationButton);
-    await userEvent.click(screen.getByText("Moscow"));
+    const moscow = await screen.findByText("Moscow");
+    await userEvent.click(moscow);
 
     await waitFor(() => {
       expect(screen.getAllByTestId("car-item").length).toBe(1);

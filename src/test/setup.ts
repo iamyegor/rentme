@@ -3,6 +3,10 @@ import { store } from "app/store";
 import { setupServer } from "msw/node";
 import { apiSlice } from "../features/api/apiSlice";
 
+// radix UI appears to use ResizeObserver, which is not available in jsdom,
+// so we have to mock it to get through the tests.
+global.ResizeObserver = require("resize-observer-polyfill");
+
 export const server = setupServer();
 
 beforeAll(() => server.listen());
