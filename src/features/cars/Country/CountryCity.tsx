@@ -5,9 +5,14 @@ import { useSearchParams } from "react-router-dom";
 type CityProps = {
   city: string;
   country: string;
+  onCitySelected: () => void;
 };
 
-export default function CountryCity({ city, country }: CityProps) {
+export default function CountryCity({
+  city,
+  country,
+  onCitySelected,
+}: CityProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isCitySelected = searchParams.get("city") === city;
   const isCountrySelected = searchParams.get("country") === country;
@@ -33,6 +38,7 @@ export default function CountryCity({ city, country }: CityProps) {
             ],
             setSearchParams,
           );
+          onCitySelected();
         }}
       >
         {city}

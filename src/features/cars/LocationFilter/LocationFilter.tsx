@@ -43,6 +43,7 @@ export default function LocationFilter() {
           key={nanoid()}
           city={city}
           country={location.country}
+          onCitySelected={() => setSearch("")}
         />
       ));
 

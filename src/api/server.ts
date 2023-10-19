@@ -15,7 +15,7 @@ const worker = setupWorker(
       });
     }
 
-    return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(500));
+    return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(150));
     // return res(ctx.status(500), ctx.json("Not found"), ctx.delay(1000));
   }),
 

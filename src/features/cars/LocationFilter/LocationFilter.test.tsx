@@ -74,4 +74,19 @@ describe("LocationFilter", () => {
 
     expect(screen.getAllByTestId("city-item").length).toBe(1);
   });
+
+  it("clears search input when the user opens choose location menu once again", async () => {
+    renderRouteInAppContext("/cars");
+
+    const selectLocationButton = await screen.findByTestId(
+      "select-location-button",
+    );
+    await userEvent.click(selectLocationButton);
+    const searchInput = await screen.findByTestId("search-input");
+    await userEvent.type(searchInput, "Moscow");
+    await userEvent.click(screen.getByText("Moscow"));
+    await userEvent.click(selectLocationButton);
+    
+    expect(searchInput).toHaveValue("");
+  });
 });
