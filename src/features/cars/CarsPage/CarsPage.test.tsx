@@ -6,9 +6,13 @@ import { beforeEach, expect } from "vitest";
 import carsFixture from "test/fixtures/carsFixture.ts";
 import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
 import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
+import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
 
 beforeEach(() => {
-  mockSuccessfulResponse("/api/locations", []);
+  mockSuccessfulResponse(
+    "/api/locations",
+    carsFixture.map((car) => car.location),
+  );
   mockSuccessfulResponse("/api/cars", carsFixture);
 });
 
@@ -21,7 +25,7 @@ describe("CarsPage", () => {
     expect(catItems.length).toBe(2);
   });
 
-  it("displays an error message when the request fails", async () => {
+  it("displays an error message when cars loading fails", async () => {
     mockFailedResponse("/api/cars", 500);
     renderRouteInAppContext("/cars");
 
@@ -33,8 +37,7 @@ describe("CarsPage", () => {
 
   it("displays proper car prices when user selects a pay for minute option", async () => {
     renderRouteInAppContext("/cars");
-
-    await screen.findAllByTestId("car-item");
+    await waitToAppearByTestId("car-item");
 
     await userEvent.click(screen.getByTestId("pay-for-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /minute/i }));
@@ -47,8 +50,7 @@ describe("CarsPage", () => {
 
   it("displays proper car prices when user selects a pay for hour option", async () => {
     renderRouteInAppContext("/cars");
-
-    await screen.findAllByTestId("car-item");
+    await waitToAppearByTestId("car-item");
 
     await userEvent.click(screen.getByTestId("pay-for-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /hour/i }));
@@ -60,13 +62,9 @@ describe("CarsPage", () => {
   });
 
   it("displays cars for the selected location, when user selects location", async () => {
-    mockSuccessfulResponse("/api/locations", [
-      { city: "Moscow", country: "Russia" },
-    ]);
     mockCarByLocationResponse();
     renderRouteInAppContext("/cars");
-
-    await screen.findAllByTestId("car-item");
+    await waitToAppearByTestId("car-item");
 
     const locationButton = screen.getByTestId("select-location-button");
     await userEvent.click(locationButton);

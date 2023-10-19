@@ -37,4 +37,8 @@
   .basic-font {
     font-family: "Inter", sans-serif;
   }
+  
+  .green-text {
+    color: rgb(34, 197, 94);
+  }
 }

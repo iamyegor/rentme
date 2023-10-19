@@ -5,9 +5,14 @@ import { ReactNode } from "react";
 import { Location } from "types";
 import Country from "features/cars/Country/Country.tsx";
 import { nanoid } from "@reduxjs/toolkit";
+import { useSearchParams } from "react-router-dom";
 
 export default function LocationFilter() {
+  const [searchParams, _setSearchParams] = useSearchParams();
   const { data: locations = [], isFetching, error } = useGetLocationsQuery();
+
+  const displayedCity = searchParams.get("city") || null;
+  const displayedCountry = searchParams.get("country") || null;
 
   let content: ReactNode;
   if (isFetching) {
@@ -56,7 +61,9 @@ export default function LocationFilter() {
           className="filter-item text-black cursor-pointer border-2 border-gray-200"
         >
           <img className="filter-icon" src={pin} alt={""} />
-          Choose location
+          {displayedCity && displayedCountry
+            ? `${displayedCity}, ${displayedCountry}`
+            : "Choose location"}
         </Button>
       </Dialog.Trigger>
 
