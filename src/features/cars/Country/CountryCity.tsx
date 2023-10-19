@@ -20,7 +20,8 @@ export default function CountryCity({
   return (
     <Dialog.Close>
       <button
-        className={`cursor-pointer text-start basic-font ${
+        className={`cursor-pointer text-start basic-font hover:opacity-70 
+          transition  ${
           isCitySelected && isCountrySelected && "green-text"
         } flex`}
         data-testid="city-item"
