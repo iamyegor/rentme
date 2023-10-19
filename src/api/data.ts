@@ -3,7 +3,7 @@ import teslaS from "../../assets/images/tesla_s.png";
 import toyotaPrius from "../../assets/images/toyota_prius.png";
 import hondaAccord from "../../assets/images/honda_accord.png";
 import rollsPhantom from "../../assets/images/rolls_phantom.png";
-import { Car } from "../types.ts";
+import { Car, Category } from "../types.ts";
 
 export const cars: Car[] = [
   {
@@ -18,6 +18,7 @@ export const cars: Car[] = [
       city: "Moscow",
       country: "Russia",
     },
+    category: Category.Economy,
   },
   {
     id: "2",
@@ -31,6 +32,7 @@ export const cars: Car[] = [
       city: "Los Angeles",
       country: "USA",
     },
+    category: Category.Premium,
   },
   {
     id: "3",
@@ -44,6 +46,7 @@ export const cars: Car[] = [
       city: "Tokyo",
       country: "Japan",
     },
+    category: Category.Comfort,
   },
   {
     id: "4",
@@ -57,6 +60,7 @@ export const cars: Car[] = [
       city: "New York",
       country: "USA",
     },
+    category: Category.Economy,
   },
   {
     id: "5",
@@ -70,5 +74,6 @@ export const cars: Car[] = [
       city: "London",
       country: "UK",
     },
+    category: Category.Premium,
   },
 ];

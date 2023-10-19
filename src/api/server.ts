@@ -7,11 +7,17 @@ const worker = setupWorker(
     const searchParams = req.url.searchParams;
     const city = searchParams.get("city");
     const country = searchParams.get("country");
+    const category = searchParams.get("category");
 
     let filteredCars = cars;
     if (city && country) {
       filteredCars = cars.filter((car) => {
         return car.location.city === city && car.location.country === country;
+      });
+    }
+    if (category) {
+      filteredCars = filteredCars.filter((car) => {
+        return car.category === category;
       });
     }
 

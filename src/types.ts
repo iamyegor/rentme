@@ -7,6 +7,7 @@ export type Car = {
   minutePriceCents: number;
   imageUrl: string;
   location: Location;
+  category: Category;
 };
 
 export type Location = {
@@ -22,6 +23,12 @@ export type ErrorWithStatus = {
 export enum PayFor {
   Hour = "hour",
   Minute = "min",
+}
+
+export enum Category {
+  Economy = "economy",
+  Comfort = "comfort",
+  Premium = "premium",
 }
 
 export type SearchParam = {

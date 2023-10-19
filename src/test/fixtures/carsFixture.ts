@@ -1,5 +1,6 @@
 import fordFusionHybrid from "../../../assets/images/ford_fusion_hybrid.png";
 import teslaS from "../../../assets/images/tesla_s.png";
+import {Category} from "../../types.ts";
 
 export default [
   {
@@ -14,6 +15,7 @@ export default [
       country: "Russia",
       city: "Moscow",
     },
+    category: Category.Economy,
   },
   {
     id: 2,
@@ -27,5 +29,6 @@ export default [
       country: "USA",
       city: "New York",
     },
+    category: Category.Premium,
   },
 ];

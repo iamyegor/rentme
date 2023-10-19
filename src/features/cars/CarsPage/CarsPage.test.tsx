@@ -7,6 +7,7 @@ import carsFixture from "test/fixtures/carsFixture.ts";
 import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
 import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
 import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
+import mockCarByCategoryResponse from "../../../test/helpers/mockCarByCategoryResponse.tsx";
 
 beforeEach(() => {
   mockSuccessfulResponse(
@@ -66,15 +67,37 @@ describe("CarsPage", () => {
     renderRouteInAppContext("/cars");
     await waitToAppearByTestId("car-item");
 
-    const locationButton = screen.getByTestId("select-location-button");
-    await userEvent.click(locationButton);
-    const moscow = await screen.findByText("Moscow");
-    await userEvent.click(moscow);
+    await userEvent.click(screen.getByTestId("select-location-button"));
+    await userEvent.click(await screen.findByText("Moscow"));
 
     await waitFor(() => {
       expect(screen.getAllByTestId("car-item").length).toBe(1);
     });
 
     expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
+  });
+
+  it("displays only cars that correspond to the selected category when user selects category", async () => {
+    mockCarByCategoryResponse();
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /economy/i }));
+    const carItems = await screen.findAllByTestId("car-item");
+
+    expect(carItems.length).toBe(1);
+    expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
+  });
+
+  it("displays all cars when user selects all categories", async () => {
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /economy/i }));
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /all/i }));
+    const carItems = await screen.findAllByTestId("car-item");
+
+    expect(carItems.length).toBe(2);
   });
 });

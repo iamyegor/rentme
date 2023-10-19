@@ -10,7 +10,7 @@ export default function PayForFilter() {
   return (
     <div className="flex items-center filter-item">
       <img className="filter-icon mr-2" src={clock} alt={""} />
-      <div className="mr-3">Pay for</div>
+      <div className="mr-2">Pay for</div>
       <Select.Root
         defaultValue={searchParams.get("payFor") || PayFor.Minute}
         onValueChange={(value: PayFor) =>

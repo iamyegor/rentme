@@ -2,14 +2,12 @@ import React from "react";
 import { Await, defer, useLoaderData } from "react-router-dom";
 import { store } from "../../../app/store.ts";
 import AsyncErrorPage from "../../../components/AsyncErrorPage.tsx";
-import { Car } from "../../../types.ts";
-import {
-  getCarsByLocationInitiate,
-  getCarsInitiate,
-} from "features/api/apiSlice.ts";
+import { Car, SearchParam } from "../../../types.ts";
+import { getCarsByParamsInitiate } from "features/api/apiSlice.ts";
 import CarsGrid from "features/cars/CarsGrid.tsx";
 import PayForFilter from "features/cars/PayForFilter.tsx";
 import LocationFilter from "../LocationFilter/LocationFilter.tsx";
+import CategoryFilter from "../CategoryFilter/CategoryFilter.tsx";
 
 export async function loader({ request }: { request: any }) {
   const carsPromise = getCarsPromise();
@@ -21,19 +19,32 @@ export async function loader({ request }: { request: any }) {
 
   function getCarsPromise() {
     const searchParams = new URL(request.url).searchParams;
-    const cityFilter = searchParams.get("city");
-    const countryFilter = searchParams.get("country");
+    const cityFilter = searchParams.get("city") || "";
+    const countryFilter = searchParams.get("country") || "";
+    const categoryFilter = searchParams.get("category") || "";
 
-    if (cityFilter && countryFilter) {
-      return store.dispatch(
-        getCarsByLocationInitiate({
-          city: cityFilter,
-          country: countryFilter,
-        }),
-      );
-    } else {
-      return store.dispatch(getCarsInitiate());
+    const params: SearchParam[] = [];
+
+    if (cityFilter) {
+      params.push({
+        key: "city",
+        value: cityFilter,
+      });
     }
+    if (countryFilter) {
+      params.push({
+        key: "country",
+        value: countryFilter,
+      });
+    }
+    if (categoryFilter) {
+      params.push({
+        key: "category",
+        value: categoryFilter,
+      });
+    }
+
+    return store.dispatch(getCarsByParamsInitiate(params));
   }
 }
 
@@ -48,6 +59,7 @@ export default function CarsPage() {
         fallback={<div data-testid="spinner">Loading 1234556...</div>}
       >
         <div className="my-4 flex justify-center items-center space-x-4 w-full">
+          <CategoryFilter />
           <LocationFilter />
           <PayForFilter />
         </div>
