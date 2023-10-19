@@ -24,7 +24,7 @@
   main {
     flex: 1;
   }
-
+  
   .filter-item {
     @apply bg-gray-100 p-2 shadow rounded-md h-[45px] font-medium text-base;
     font-family: "Inter", sans-serif;

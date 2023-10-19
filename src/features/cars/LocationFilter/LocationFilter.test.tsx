@@ -60,4 +60,18 @@ describe("LocationFilter", () => {
     moscow = await screen.findByText("Moscow");
     expect(moscow.style).not.toEqual(prevStyle);
   });
+
+  it("displays proper location when users types city in search input", async () => {
+    renderRouteInAppContext("/cars");
+
+    const selectLocationButton = await screen.findByTestId(
+      "select-location-button",
+    );
+    await userEvent.click(selectLocationButton);
+    const searchInput = await screen.findByTestId("search-input");
+    expect(screen.getAllByTestId("city-item").length).not.toBe(1);
+    await userEvent.type(searchInput, "Moscow");
+
+    expect(screen.getAllByTestId("city-item").length).toBe(1);
+  });
 });

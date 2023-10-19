@@ -10,13 +10,14 @@ type CityProps = {
 export default function CountryCity({ city, country }: CityProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const isCitySelected = searchParams.get("city") === city;
+  const isCountrySelected = searchParams.get("country") === country;
 
   return (
     <Dialog.Close>
       <button
         className={`cursor-pointer text-start basic-font ${
-          isCitySelected && "green-text"
-        }`}
+          isCitySelected && isCountrySelected && "green-text"
+        } flex`}
         data-testid="city-item"
         onClick={() => {
           appendSearchParams(
