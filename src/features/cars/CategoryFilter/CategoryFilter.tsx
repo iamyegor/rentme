@@ -7,7 +7,7 @@ import categories from "../../../../assets/icons/categories.png";
 
 export default function CategoryFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   return (
     <div className={"filter-item flex items-center"}>
       <img className={"filter-icon mr-2"} src={categories} alt={""} />

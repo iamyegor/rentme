@@ -1,16 +1,20 @@
 ﻿import { server } from "../setup.ts";
 import { rest } from "msw";
 import carsFixture from "../fixtures/carsFixture.ts";
+import { Car } from "../../types.ts";
 
-export default function mockCarByCategoryResponse() {
+export default function mockCarByCategoryResponse(
+  category: string,
+  response: Car[],
+) {
   server.use(
     rest.get("http://localhost/api/cars", (req, res, ctx) => {
-      const category = req.url.searchParams.get("category");
+      const categoryFilter = req.url.searchParams.get("category");
 
       let matchedCars = carsFixture;
-      if (category === "economy") {
-        matchedCars = [carsFixture[0]];
-      } 
+      if (categoryFilter === category) {
+        matchedCars = response;
+      }
 
       return res(ctx.json(matchedCars));
     }),

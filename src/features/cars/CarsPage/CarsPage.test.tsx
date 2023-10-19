@@ -8,6 +8,7 @@ import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
 import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
 import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
 import mockCarByCategoryResponse from "../../../test/helpers/mockCarByCategoryResponse.tsx";
+import mockCarByLocationAndCategoryResponse from "../../../test/helpers/mockCarByLocationAndCategoryResponse.tsx";
 
 beforeEach(() => {
   mockSuccessfulResponse(
@@ -78,7 +79,7 @@ describe("CarsPage", () => {
   });
 
   it("displays only cars that correspond to the selected category when user selects category", async () => {
-    mockCarByCategoryResponse();
+    mockCarByCategoryResponse("economy", [carsFixture[0]]);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
@@ -99,5 +100,17 @@ describe("CarsPage", () => {
     const carItems = await screen.findAllByTestId("car-item");
 
     expect(carItems.length).toBe(2);
+  });
+
+  it("properly displays cars when both category and location are selected", async () => {
+    mockCarByLocationAndCategoryResponse();
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("select-location-button"));
+    await userEvent.click(await screen.findByText("Moscow"));
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /premium/i }));
+
+    expect(screen.queryAllByTestId("car-item")).toEqual([]);
   });
 });
