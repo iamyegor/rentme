@@ -1,5 +1,5 @@
-import { Car, Category } from "types";
-import CarItem from "./CarItem";
+import { Car, Category } from "../../types.ts";
+import CarItem from "./CarItem.tsx";
 import { nanoid } from "@reduxjs/toolkit";
 
 type CarsGridProps = {

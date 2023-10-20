@@ -2,7 +2,7 @@ import NotFound from "components/NotFound.tsx";
 import Layout from "./components/Layout/Layout";
 import CarsPage, {
   loader as carsLoader,
-} from "./features/cars/CarsPage/CarsPage.tsx";
+} from "./pages/Cars/CarsPage/CarsPage.tsx";
 import HomePage from "./features/home/HomePage.tsx";
 import ErrorPage from "components/ErrorPage.tsx";
 import HowItWorksPage from "features/how-it-works/HowItWorksPage.tsx";

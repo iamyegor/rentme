@@ -1,8 +1,8 @@
 ﻿import { Button, Dialog } from "@radix-ui/themes";
 import pin from "../../../../assets/icons/pin.png";
-import { useGetLocationsQuery } from "features/api/apiSlice.ts";
+import { useGetLocationsQuery } from "../../../features/api/apiSlice.ts";
 import { ReactNode, useState } from "react";
-import Country from "features/cars/Country/Country.tsx";
+import Country from "../Country/Country.tsx";
 import { nanoid } from "@reduxjs/toolkit";
 import { useSearchParams } from "react-router-dom";
 import LocationSearch from "../LocationSearch.tsx";

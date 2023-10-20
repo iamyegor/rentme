@@ -1,10 +1,10 @@
 ﻿import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import mockFailedResponse from "test/helpers/mockFailedResponse.tsx";
-import mockSuccessfulResponse from "test/helpers/mockSuccessfulResponse.tsx";
+import mockFailedResponse from "../../../test/helpers/mockFailedResponse.tsx";
+import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
 import { beforeEach, expect } from "vitest";
-import carsFixture from "test/fixtures/carsFixture.ts";
-import renderRouteInAppContext from "test/helpers/renderRouteInAppContext.tsx";
+import carsFixture from "../../../test/fixtures/carsFixture.ts";
+import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
 import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
 import mockCarByLocationAndCategoryResponse from "../../../test/helpers/mockCarByLocationAndCategoryResponse.tsx";

@@ -3,9 +3,9 @@ import { Await, defer, useLoaderData } from "react-router-dom";
 import { store } from "../../../app/store.ts";
 import AsyncErrorPage from "../../../components/AsyncErrorPage.tsx";
 import { Car, SearchParam } from "../../../types.ts";
-import { getCarsByParamsInitiate } from "features/api/apiSlice.ts";
-import CarsGrid from "features/cars/CarsGrid.tsx";
-import PayForFilter from "features/cars/PayForFilter.tsx";
+import { getCarsByParamsInitiate } from "../../../features/api/apiSlice.ts";
+import CarsGrid from "../CarsGrid.tsx";
+import PayForFilter from "../PayForFilter.tsx";
 import LocationFilter from "../LocationFilter/LocationFilter.tsx";
 import CategoryFilter from "../CategoryFilter/CategoryFilter.tsx";
 

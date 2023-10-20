@@ -1,4 +1,4 @@
-import { Car, PayFor } from "types";
+import { Car, PayFor } from "../../types.ts";
 import { useSearchParams } from "react-router-dom";
 
 type CarItemProps = {
