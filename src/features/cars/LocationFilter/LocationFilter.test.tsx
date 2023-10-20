@@ -69,7 +69,7 @@ describe("LocationFilter", () => {
     );
     await userEvent.click(selectLocationButton);
     const searchInput = await screen.findByTestId("search-input");
-    expect(screen.getAllByTestId("city-item").length).not.toBe(1);
+    expect(screen.getAllByTestId("city-item").length).toBe(2);
     await userEvent.type(searchInput, "Moscow");
 
     expect(screen.getAllByTestId("city-item").length).toBe(1);
@@ -86,7 +86,7 @@ describe("LocationFilter", () => {
     await userEvent.type(searchInput, "Moscow");
     await userEvent.click(screen.getByText("Moscow"));
     await userEvent.click(selectLocationButton);
-    
+
     expect(searchInput).toHaveValue("");
   });
 });

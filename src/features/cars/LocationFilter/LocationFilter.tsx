@@ -2,16 +2,12 @@
 import pin from "../../../../assets/icons/pin.png";
 import { useGetLocationsQuery } from "features/api/apiSlice.ts";
 import { ReactNode, useState } from "react";
-import { Location } from "types";
 import Country from "features/cars/Country/Country.tsx";
 import { nanoid } from "@reduxjs/toolkit";
 import { useSearchParams } from "react-router-dom";
 import LocationSearch from "../LocationSearch.tsx";
 
-type GroupedLocation = {
-  country: string;
-  cities: string[];
-};
+type GroupedLocations = Record<string, string[]>;
 
 export default function LocationFilter() {
   const [search, setSearch] = useState("");
@@ -29,26 +25,21 @@ export default function LocationFilter() {
       content = <div data-testid="error">{JSON.stringify(error.data)}</div>;
     }
   } else {
-    const groupedLocations = groupByCountry(locations);
-    let matchedLocations = getLocationsWithMatchedCity(groupedLocations);
+    const desiredLocations = getLocationsWithMatchedCity(groupByCountry());
+    const countries = Object.keys(desiredLocations) as string[];
 
-    for (const location of matchedLocations) {
-      location.cities = getMatchedCities(location);
-    }
-
-    const countriesWithCitiesElements = matchedLocations.map((location) => {
-      const citiesElements = location.cities.map((city) => (
+    const locationsElements = countries.map((country) => {
+      const citiesElements = desiredLocations[country].map((city) => (
         <Country.City
-          data-testid={""}
           key={nanoid()}
           city={city}
-          country={location.country}
+          country={country}
           onCitySelected={() => setSearch("")}
         />
       ));
 
       return (
-        <Country key={nanoid()} country={location.country}>
+        <Country key={nanoid()} country={country}>
           {citiesElements}
         </Country>
       );
@@ -57,39 +48,32 @@ export default function LocationFilter() {
     content = (
       <>
         <LocationSearch search={search} setSearch={setSearch} />
-        {countriesWithCitiesElements}
+        {locationsElements}
       </>
     );
   }
 
-  function groupByCountry(locations: Location[]) {
-    const countries = locations.map((location) => location.country);
-    const uniqueCountries = Array.from(new Set(countries));
-    const countriesWithCities: GroupedLocation[] = uniqueCountries.map(
-      (country) => {
-        const cities = locations
-          .filter((location) => location.country === country)
-          .map((location) => location.city);
-        return { country, cities };
-      },
-    );
-    return countriesWithCities;
+  function groupByCountry() {
+    return locations.reduce((result, {country, city}) => {
+      (result[country] = result[country] || []).push(city);
+      return result;
+    }, {} as GroupedLocations);
   }
 
-  function getLocationsWithMatchedCity(groupedLocations: GroupedLocation[]) {
-    return groupedLocations.filter((location) => {
-      return search
-        ? location.cities.some((city) =>
-            city.toLowerCase().includes(search.toLowerCase()),
-          )
-        : true;
-    });
-  }
+  function getLocationsWithMatchedCity(groupedLocations: GroupedLocations) {
+    const countries = Object.keys(groupedLocations) as string[];
+    return countries.reduce((result, country) => {
+      const cities = groupedLocations[country];
+      const matchedCities = cities.filter((city) => {
+        return city.toLowerCase().includes(search.toLowerCase());
+      });
 
-  function getMatchedCities(location: GroupedLocation) {
-    return location.cities.filter((city) => {
-      return city.toLowerCase().includes(search.toLowerCase());
-    });
+      if (matchedCities.length > 0) {
+        result[country] = matchedCities;
+      }
+
+      return result;
+    }, {} as GroupedLocations);
   }
 
   return (
