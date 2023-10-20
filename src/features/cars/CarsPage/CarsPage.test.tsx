@@ -88,4 +88,13 @@ describe("CarsPage", () => {
 
     expect(screen.queryAllByTestId("car-item")).toEqual([]);
   });
+
+  it("displays cars grouped by categories", async () => {
+    renderRouteInAppContext("/cars");
+
+    await waitToAppearByTestId("car-item");
+    expect(screen.getAllByTestId("car-group").length).toBe(2);
+    expect(screen.getByText(/economy/i)).toBeInTheDocument();
+    expect(screen.getByText(/premium/i)).toBeInTheDocument();
+  });
 });

@@ -1,3 +1,4 @@
+/// <reference lib="es2017.object" />
 {
   "compilerOptions": {
     "baseUrl": "./src",

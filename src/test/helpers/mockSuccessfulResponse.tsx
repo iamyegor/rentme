@@ -7,7 +7,7 @@ export default function mockSuccessfulResponse(
 ) {
   server.use(
     rest.get(`http://localhost${relativeUrl}`, (_, res, ctx) => {
-      return res(ctx.status(200), ctx.json(fixtures), ctx.delay(150));
+      return res(ctx.status(200), ctx.json(fixtures));
     })
   );
 }

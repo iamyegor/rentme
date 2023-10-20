@@ -1,24 +1,38 @@
-import { Car } from "types";
+import { Car, Category } from "types";
 import CarItem from "./CarItem";
+import { nanoid } from "@reduxjs/toolkit";
 
 type CarsGridProps = {
   cars: Car[];
 };
 
+type GroupedCars = Record<Category, Car[]>;
+
 export default function CarsGrid({ cars }: CarsGridProps) {
   function renderCarItems(cars: Car[]) {
-    return (
-      <>
-        {cars.map((car) => (
-          <CarItem data-testid="car-item" key={car.id} car={car} />
-        ))}
-      </>
-    );
+    const groupedCars = groupCarsByCategory(cars);
+
+    const categories = Object.keys(groupedCars) as Category[];
+    return categories.map((category) => (
+      <div key={nanoid()} className="flex flex-col mb-4" data-testid={"car-group"}>
+        <h1 className="text-2xl font-bold basic-font">
+          {category.charAt(0).toUpperCase() + category.substring(1)}
+        </h1>
+        <div className={"border-black grid mt-4 grid-cols-3 gap-1"}>
+          {groupedCars[category].map((car) => (
+            <CarItem data-testid="car-item" key={car.id} car={car} />
+          ))}
+        </div>
+      </div>
+    ));
   }
 
-  return (
-    <div className="grid grid-flow-row h-0 grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-1">
-      {renderCarItems(cars)}
-    </div>
-  );
+  function groupCarsByCategory(cars: Car[]) {
+    return cars.reduce((result, car) => {
+      (result[car.category] = result[car.category] || []).push(car);
+      return result;
+    }, {} as GroupedCars);
+  }
+
+  return <>{renderCarItems(cars)}</>;
 }

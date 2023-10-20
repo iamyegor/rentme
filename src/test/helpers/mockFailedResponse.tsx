@@ -7,7 +7,7 @@ export default function mockFailedResponse(
 ) {
   server.use(
     rest.get(`http://localhost${relativeUrl}`, (_, res, ctx) => {
-      return res(ctx.status(status), ctx.delay(150));
+      return res(ctx.status(status));
     })
   );
 }

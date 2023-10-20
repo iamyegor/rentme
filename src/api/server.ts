@@ -22,7 +22,7 @@ const worker = setupWorker(
     }
 
     return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(150));
-    // return res(ctx.status(500), ctx.json("Not found"), ctx.delay(1000));
+    // return res(ctx.status(500), ctx.json("Not found"), ctx.delay(150));
   }),
 
   rest.get("http://localhost/api/locations", (_req, res, ctx) => {
@@ -31,7 +31,7 @@ const worker = setupWorker(
       locations.push(car.location);
     }
 
-    return res(ctx.status(200), ctx.json(locations), ctx.delay(500));
+    return res(ctx.status(200), ctx.json(locations), ctx.delay(150));
   }),
 );
 
