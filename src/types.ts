@@ -35,3 +35,8 @@ export type SearchParam = {
   key: string;
   value: string;
 };
+
+export type LowHighPrices = {
+  low: number;
+  high: number;
+}

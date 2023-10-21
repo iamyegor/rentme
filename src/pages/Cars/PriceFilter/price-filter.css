@@ -1,0 +1,8 @@
+﻿.price-filter__icon-container {
+  @apply border border-gray-300 p-1 hover:shadow transition-all;
+}
+
+.price-filter__input {
+  @apply border border-gray-300 w-[100px] focus:outline-none h-full bg-transparent 
+  rounded-md px-2 focus:shadow-md transition-all focus:border-2;
+}

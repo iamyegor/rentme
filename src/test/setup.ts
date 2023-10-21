@@ -1,23 +1,28 @@
-import "@testing-library/jest-dom";
-import { store } from "app/store";
+﻿import "@testing-library/jest-dom";
+
+import { cleanup } from "@testing-library/react";
+import { afterAll, afterEach, beforeAll } from "vitest";
+import { store } from "../app/store.ts";
+import { apiSlice } from "../features/api/apiSlice.ts";
 import { setupServer } from "msw/node";
-import { apiSlice } from "../features/api/apiSlice";
+
+export const server = setupServer();
+beforeAll(() => server.listen());
+afterAll(() => server.close());
+afterEach(() => {
+  cleanup();
+  server.resetHandlers();
+  store.dispatch(apiSlice.util.resetApiState());
+});
+
+/* RADIX UI MOCKS */
 
 // radix UI appears to use ResizeObserver, which is not available in jsdom,
 // so we have to mock it to get through the tests.
 global.ResizeObserver = require("resize-observer-polyfill");
 
-export const server = setupServer();
-
-beforeAll(() => server.listen());
-afterEach(() => {
-  server.resetHandlers();
-  store.dispatch(apiSlice.util.resetApiState());
-});
-afterAll(() => server.close());
-
 /**
- * JSDOM doesn't implement PointerEvent so we need to mock our own implementation
+ * JSDOM doesn't implement PointerEvent, so we need to mock our own implementation
  * Default to mouse left click interaction
  * https://github.com/radix-ui/primitives/issues/1822
  * https://github.com/jsdom/jsdom/pull/2666

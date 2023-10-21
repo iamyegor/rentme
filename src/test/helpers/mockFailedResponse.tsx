@@ -1,5 +1,5 @@
 import { rest } from "msw";
-import { server } from "test/setup";
+import { server } from "../setup.ts";
 
 export default function mockFailedResponse(
   relativeUrl: string,
