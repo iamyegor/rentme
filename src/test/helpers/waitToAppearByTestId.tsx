@@ -3,4 +3,3 @@
 export default async function waitToAppearByTestId(elementTestId: string) {
   await screen.findAllByTestId(elementTestId);
 }
-

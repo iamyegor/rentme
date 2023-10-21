@@ -7,6 +7,8 @@ import reset from "../../../../assets/icons/refresh-arrow.png";
 import apply from "../../../../assets/icons/magnifying-glass.png";
 import "./price-filter.css";
 
+const NUMBER_DOT_REGEXP = /[^0-9.]/g;
+
 export default function PriceFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const otherSearchParams = Object.fromEntries(
@@ -55,15 +57,13 @@ export default function PriceFilter() {
   }
 
   function handleMinPriceChange(event: ChangeEvent<HTMLInputElement>) {
-    setMinPrice(getNumericOrEmptyString(event.target.value));
+    const { value } = event.target;
+    setMinPrice(value.replace(NUMBER_DOT_REGEXP, ""));
   }
 
   function handleMaxPriceChange(event: ChangeEvent<HTMLInputElement>) {
-    setMaxPrice(getNumericOrEmptyString(event.target.value));
-  }
-
-  function getNumericOrEmptyString(value: string) {
-    return value.replace(/[^0-9.]/g, "");
+    const { value } = event.target;
+    setMaxPrice(value.replace(NUMBER_DOT_REGEXP, ""));
   }
 
   function resetPrices() {

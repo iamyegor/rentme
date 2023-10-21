@@ -1,22 +1,12 @@
 ﻿import { screen, waitFor } from "@testing-library/react";
 import mockFailedResponse from "../../../test/helpers/mockFailedResponse.tsx";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
-import mockCarByLocationResponse from "../../../test/helpers/mockCarByLocationResponse.tsx";
 import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
-import mockCarByLocationAndCategoryResponse from "../../../test/helpers/mockCarByLocationAndCategoryResponse.tsx";
 import carsFixture from "../../../test/fixtures/carsFixture.ts";
 import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
 import { expect } from "vitest";
 import mockResponseWithParams from "../../../test/helpers/mockResponseWithParams.tsx";
 import userEvent from "@testing-library/user-event";
-
-beforeEach(() => {
-  mockSuccessfulResponse(
-    "/api/locations",
-    carsFixture.map((car) => car.location),
-  );
-  mockSuccessfulResponse("/api/cars", carsFixture);
-});
 
 describe("CarsPage", () => {
   it("displays cars list once loaded", async () => {
@@ -26,6 +16,7 @@ describe("CarsPage", () => {
     const catItems = await screen.findAllByTestId("car-item");
     expect(catItems.length).toBe(2);
   });
+  
 
   it("displays an error message when cars loading fails", async () => {
     mockFailedResponse("/api/cars", 500);
@@ -82,11 +73,9 @@ describe("CarsPage", () => {
       [carsFixture[0]],
       carsFixture,
     );
-    mockCarByLocationResponse();
     renderRouteInAppContext("/cars");
-    await waitToAppearByTestId("car-item");
 
-    await userEvent.click(screen.getByTestId("select-location-button"));
+    await userEvent.click(await screen.findByTestId("select-location-button"));
     await userEvent.click(await screen.findByText("Moscow"));
 
     await waitFor(() => {
@@ -97,7 +86,18 @@ describe("CarsPage", () => {
   });
 
   it("properly displays cars when both category and location are selected", async () => {
-    mockCarByLocationAndCategoryResponse();
+    mockResponseWithParams(
+      [
+        { key: "city", value: "Moscow" },
+        {
+          key: "country",
+          value: "Russia",
+        },
+        { key: "category", value: "premium" },
+      ],
+      [],
+      carsFixture,
+    );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("select-location-button"));
@@ -105,7 +105,9 @@ describe("CarsPage", () => {
     await userEvent.click(await screen.findByTestId("category-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /premium/i }));
 
-    expect(screen.queryAllByTestId("car-item")).toEqual([]);
+    await waitFor(() => {
+      expect(screen.queryAllByTestId("car-item")).toEqual([]);
+    });
   });
 
   it("displays cars grouped by categories", async () => {

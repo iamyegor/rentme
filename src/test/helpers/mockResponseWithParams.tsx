@@ -5,7 +5,7 @@ import { SearchParam } from "../../types.ts";
 export default function mockResponseWithParams(
   params: SearchParam[],
   resolvedValue: any,
-  alternativeValue: any,
+  alternativeValue: any = {},
 ) {
   server.use(
     rest.get("http://localhost/api/cars", (req, res, ctx) => {

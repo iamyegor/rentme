@@ -1,14 +1,27 @@
 ﻿import "@testing-library/jest-dom";
 
 import { cleanup } from "@testing-library/react";
-import { afterAll, afterEach, beforeAll } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 import { store } from "../app/store.ts";
 import { apiSlice } from "../features/api/apiSlice.ts";
 import { setupServer } from "msw/node";
+import mockSuccessfulResponse from "./helpers/mockSuccessfulResponse.tsx";
+import carsFixture from "./fixtures/carsFixture.ts";
 
 export const server = setupServer();
 beforeAll(() => server.listen());
+
 afterAll(() => server.close());
+
+beforeEach(() => {
+  mockSuccessfulResponse(
+    "/api/locations",
+    carsFixture.map((car) => car.location),
+  );
+  mockSuccessfulResponse("/api/cars", carsFixture);
+  mockSuccessfulResponse("/api/lowestAndHighestPrice", {});
+});
+
 afterEach(() => {
   cleanup();
   server.resetHandlers();

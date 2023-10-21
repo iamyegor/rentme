@@ -3,17 +3,7 @@ import { screen, waitFor } from "@testing-library/react";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import userEvent from "@testing-library/user-event";
 import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
-import carsFixture from "../../../test/fixtures/carsFixture.ts";
 import mockFailedResponse from "../../../test/helpers/mockFailedResponse.tsx";
-
-beforeEach(() => {
-  mockSuccessfulResponse(
-    "/api/locations",
-    carsFixture.map((car) => car.location),
-  );
-  mockSuccessfulResponse("/api/cars", carsFixture);
-  mockSuccessfulResponse("/api/lowestAndHighestPrice", {});
-});
 
 describe("PriceFilter", () => {
   it("accepts only numbers for both inputs", async () => {

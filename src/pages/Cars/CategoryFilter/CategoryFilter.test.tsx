@@ -1,13 +1,22 @@
-﻿import mockCarByCategoryResponse from "../../../test/helpers/mockCarByCategoryResponse.tsx";
-import carsFixture from "../../../test/fixtures/carsFixture.ts";
+﻿import carsFixture from "../../../test/fixtures/carsFixture.ts";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/react";
 import { describe, expect } from "vitest";
+import mockResponseWithParams from "../../../test/helpers/mockResponseWithParams.tsx";
 
 describe("CategoryFilter", () => {
   it("displays only cars that correspond to the selected category when user selects category", async () => {
-    mockCarByCategoryResponse("economy", [carsFixture[0]]);
+    mockResponseWithParams(
+      [
+        {
+          key: "category",
+          value: "economy",
+        },
+      ],
+      [carsFixture[0]],
+      [],
+    );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
@@ -20,15 +29,25 @@ describe("CategoryFilter", () => {
   });
 
   it("displays all cars when user selects all categories", async () => {
-    mockCarByCategoryResponse("economy", [carsFixture[0]]);
+    mockResponseWithParams(
+      [
+        {
+          key: "category",
+          value: "economy",
+        },
+      ],
+      [carsFixture[0]],
+      carsFixture,
+    );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /economy/i }));
     await userEvent.click(await screen.findByTestId("category-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /all/i }));
-    const carItems = await screen.findAllByTestId("car-item");
 
-    expect(carItems.length).toBe(2);
+    await waitFor(() =>
+      expect(screen.getAllByTestId("car-item").length).toBe(2),
+    );
   });
 });

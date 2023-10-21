@@ -3,15 +3,7 @@ import userEvent from "@testing-library/user-event";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
 import carsFixture from "../../../test/fixtures/carsFixture.ts";
-import { beforeEach, expect } from "vitest";
-
-beforeEach(() => {
-  mockSuccessfulResponse(
-    "/api/locations",
-    carsFixture.map((car) => car.location),
-  );
-  mockSuccessfulResponse("/api/cars", carsFixture);
-});
+import { expect } from "vitest";
 
 describe("LocationFilter", () => {
   it("displays only cities and countries that have available cars", async () => {
