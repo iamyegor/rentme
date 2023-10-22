@@ -42,6 +42,13 @@ export default function PriceFilter() {
     resetPrices();
   }, [JSON.stringify(otherSearchParams)]);
 
+  useEffect(() => {
+    if (!minPrice && !maxPrice) {
+      removeSearchParam("minPrice", setSearchParams);
+      removeSearchParam("maxPrice", setSearchParams);
+    }
+  }, [minPrice, maxPrice]);
+
   function applyPrices() {
     if (minPrice) {
       appendSearchParam({ key: "minPrice", value: minPrice }, setSearchParams);
@@ -77,7 +84,7 @@ export default function PriceFilter() {
     const newMinPrice = Number(setMinPriceIfNecessary()) || Number(minPrice);
     const newMaxPrice = Number(setMaxPriceIfNecessary()) || Number(maxPrice);
     if (newMinPrice && newMaxPrice) {
-      if (newMinPrice > newMaxPrice) {
+      if (newMinPrice > newMaxPrice) { // swap prices
         setMinPrice(newMaxPrice.toString());
         setMaxPrice(newMinPrice.toString());
       }

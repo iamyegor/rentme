@@ -16,7 +16,6 @@ describe("CarsPage", () => {
     const catItems = await screen.findAllByTestId("car-item");
     expect(catItems.length).toBe(2);
   });
-  
 
   it("displays an error message when cars loading fails", async () => {
     mockFailedResponse("/api/cars", 500);
@@ -169,5 +168,31 @@ describe("CarsPage", () => {
       expect(screen.getAllByTestId("car-item").length).toBe(1);
     });
     expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
+  });
+
+  it("removes minPrice and maxPrice filter when user manually clears input fields", async () => {
+    mockResponseWithParams(
+      [
+        { key: "minPrice", value: "25" },
+        {
+          key: "maxPrice",
+          value: "30",
+        },
+      ],
+      [carsFixture[0]],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "25");
+    await userEvent.type(screen.getByTestId("max-price"), "30");
+    await userEvent.click(screen.getByTestId("apply-price-filter"));
+
+    await userEvent.clear(await screen.findByTestId("min-price"));
+    await userEvent.clear(screen.getByTestId("max-price"));
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("car-item").length).toBe(2);
+    });
   });
 });
