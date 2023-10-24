@@ -2,7 +2,16 @@
   @apply border border-gray-300 p-1 hover:shadow transition-all;
 }
 
+.price-filter__input-container {
+  @apply flex items-center justify-between w-[120px] focus-within:shadow-md 
+  focus-within:border-2 transition-all border border-gray-300 px-0.5
+  rounded-md h-full;
+}
+
 .price-filter__input {
-  @apply border border-gray-300 w-[100px] focus:outline-none h-full bg-transparent 
-  rounded-md px-2 focus:shadow-md transition-all focus:border-2;
+  @apply h-full focus:outline-none bg-transparent w-[5.5rem];
+}
+
+.price-filter__dollar-sign {
+  @apply mr-0.5 text-green-500 scale-[1.15]
 }

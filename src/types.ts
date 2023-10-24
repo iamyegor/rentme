@@ -32,8 +32,7 @@ export enum Category {
 }
 
 export type SearchParam = {
-  key: string;
-  value: string;
+  [key: string]: string;
 };
 
 export type LowHighPrices = {

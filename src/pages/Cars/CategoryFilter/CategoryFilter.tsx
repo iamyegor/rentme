@@ -15,11 +15,11 @@ export default function CategoryFilter() {
         Category
       </label>
       <Select.Root
-        defaultValue={searchParams.get("category") || "all"}
+        value={searchParams.get("category") || "all"}
         onValueChange={(value: Category) => {
           value.toString() === "all"
             ? removeSearchParam("category", setSearchParams)
-            : appendSearchParam({ key: "category", value }, setSearchParams);
+            : appendSearchParam({ category: value }, setSearchParams);
         }}
       >
         <Select.Trigger

@@ -56,51 +56,32 @@ describe("CarsPage", () => {
     });
     expect(screen.getAllByTestId("car-price")[1]).toHaveTextContent("$60");
   });
-
   it("displays cars for the selected location, when user selects location", async () => {
     mockResponseWithParams(
-      [
-        {
-          key: "city",
-          value: "Moscow",
-        },
-        {
-          key: "country",
-          value: "Russia",
-        },
-      ],
+      [{ city: "Moscow" }, { country: "Russia" }],
       [carsFixture[0]],
       carsFixture,
     );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("select-location-button"));
-    await userEvent.click(await screen.findByText("Moscow"));
+    await userEvent.click(await screen.findByText(/moscow/i));
 
     await waitFor(() => {
-      expect(screen.getAllByTestId("car-item").length).toBe(1);
+      expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
     });
-
-    expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
   });
 
   it("properly displays cars when both category and location are selected", async () => {
     mockResponseWithParams(
-      [
-        { key: "city", value: "Moscow" },
-        {
-          key: "country",
-          value: "Russia",
-        },
-        { key: "category", value: "premium" },
-      ],
+      [{ city: "Moscow" }, { country: "Russia" }, { category: "premium" }],
       [],
       carsFixture,
     );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("select-location-button"));
-    await userEvent.click(await screen.findByText("Moscow"));
+    await userEvent.click(await screen.findByText(/moscow/i));
     await userEvent.click(await screen.findByTestId("category-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /premium/i }));
 
@@ -120,13 +101,7 @@ describe("CarsPage", () => {
 
   it("displays cars with price of specified range for minute", async () => {
     mockResponseWithParams(
-      [
-        { key: "minPrice", value: "0.40" },
-        {
-          key: "maxPrice",
-          value: "0.50",
-        },
-      ],
+      [{ minPrice: "0.40" }, { maxPrice: "0.50" }],
       [carsFixture[0]],
       carsFixture,
     );
@@ -135,61 +110,65 @@ describe("CarsPage", () => {
     await userEvent.type(await screen.findByTestId("min-price"), "0.40");
     await userEvent.type(screen.getByTestId("max-price"), "0.50");
 
-    await userEvent.click(screen.getByTestId("apply-price-filter"));
-
     await waitFor(() => {
       expect(screen.getAllByTestId("car-item").length).toBe(1);
+      expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
     });
-    expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
   });
 
   it("displays cars with price of specified range for hour", async () => {
     mockResponseWithParams(
-      [
-        { key: "minPrice", value: "25" },
-        {
-          key: "maxPrice",
-          value: "30",
-        },
-      ],
-      [carsFixture[0]],
+      [{ minPrice: "50" }, { maxPrice: "65" }],
+      [carsFixture[1]],
       carsFixture,
     );
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("pay-for-dropdown"));
     await userEvent.click(screen.getByRole("option", { name: /hour/i }));
+    await userEvent.type(await screen.findByTestId("min-price"), "50");
+    await userEvent.type(screen.getByTestId("max-price"), "65");
 
-    await userEvent.type(await screen.findByTestId("min-price"), "25");
-    await userEvent.type(screen.getByTestId("max-price"), "30");
-    await userEvent.click(screen.getByTestId("apply-price-filter"));
-
-    await waitFor(() => {
-      expect(screen.getAllByTestId("car-item").length).toBe(1);
-    });
-    expect(screen.getByText("Ford Fusion Hybrid, 2020")).toBeInTheDocument();
+    setTimeout(() => screen.debug(undefined, 20000), 1500);
+    await waitFor(
+      () => {
+        expect(screen.getAllByTestId("car-item").length).toBe(1);
+        expect(screen.getByText("Tesla S, 2019")).toBeInTheDocument();
+      },
+      { timeout: 1500 },
+    );
   });
 
-  it("removes minPrice and maxPrice filter when user manually clears input fields", async () => {
+  it("displays appropriate cars when user clears min price using clear button", async () => {
     mockResponseWithParams(
-      [
-        { key: "minPrice", value: "25" },
-        {
-          key: "maxPrice",
-          value: "30",
-        },
-      ],
-      [carsFixture[0]],
+      [{ minPrice: "0.5" }, { maxPrice: "1.5" }],
+      [carsFixture[1]],
       carsFixture,
     );
     renderRouteInAppContext("/cars");
 
-    await userEvent.type(await screen.findByTestId("min-price"), "25");
-    await userEvent.type(screen.getByTestId("max-price"), "30");
-    await userEvent.click(screen.getByTestId("apply-price-filter"));
+    await userEvent.type(await screen.findByTestId("min-price"), "0.5");
+    await userEvent.type(screen.getByTestId("max-price"), "1.5");
 
-    await userEvent.clear(await screen.findByTestId("min-price"));
-    await userEvent.clear(screen.getByTestId("max-price"));
+    await userEvent.click(screen.getByTestId("min-price-clear"));
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("car-item").length).toBe(2);
+    });
+  });
+
+  it("displays appropriate cars when user clears max price using clear button", async () => {
+    mockResponseWithParams(
+      [{ minPrice: "0.5" }, { maxPrice: "1.5" }],
+      [carsFixture[1]],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "0.5");
+    await userEvent.type(screen.getByTestId("max-price"), "1.5");
+
+    await userEvent.click(screen.getByTestId("max-price-clear"));
 
     await waitFor(() => {
       expect(screen.getAllByTestId("car-item").length).toBe(2);

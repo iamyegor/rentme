@@ -22,21 +22,12 @@ export default function CountryCity({
       <button
         className={`cursor-pointer text-start basic-font hover:opacity-70 
           transition  ${
-          isCitySelected && isCountrySelected && "green-text"
-        } flex`}
+            isCitySelected && isCountrySelected && "green-text"
+          } flex`}
         data-testid="city-item"
         onClick={() => {
           appendSearchParams(
-            [
-              {
-                key: "city",
-                value: city,
-              },
-              {
-                key: "country",
-                value: country,
-              },
-            ],
+            [{ city: city }, { country: country }],
             setSearchParams,
           );
           onCitySelected();

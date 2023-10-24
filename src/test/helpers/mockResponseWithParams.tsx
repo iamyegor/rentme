@@ -9,8 +9,9 @@ export default function mockResponseWithParams(
 ) {
   server.use(
     rest.get("http://localhost/api/cars", (req, res, ctx) => {
-      const allTrue = params.every(({ key, value }) => {
-        return req.url.searchParams.get(key) === value;
+      const allTrue = params.every((param) => {
+        const key = Object.keys(param)[0];
+        return req.url.searchParams.get(key) === param[key];
       });
 
       if (allTrue) {

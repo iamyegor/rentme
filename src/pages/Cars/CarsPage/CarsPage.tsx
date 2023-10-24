@@ -1,5 +1,5 @@
 import React from "react";
-import { Await, defer, useLoaderData } from "react-router-dom";
+import {Await, defer, Link, useLoaderData} from "react-router-dom";
 import { store } from "../../../app/store.ts";
 import AsyncErrorPage from "../../../components/AsyncErrorPage.tsx";
 import { Car } from "../../../types.ts";
@@ -32,6 +32,7 @@ export default function CarsPage() {
         fallback={<div data-testid="spinner">Loading 1234556...</div>}
       >
         <div className="my-4 flex justify-center items-center space-x-4 w-full">
+          <Link to={`.?payFor=min`} >Link</Link>
           <CategoryFilter />
           <LocationFilter />
           <PayForFilter />

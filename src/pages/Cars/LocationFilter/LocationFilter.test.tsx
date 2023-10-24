@@ -32,6 +32,7 @@ describe("LocationFilter", () => {
     const moscow = await screen.findByText("Moscow");
     await userEvent.click(moscow);
 
+    screen.debug()
     expect(await screen.findByText("Moscow, Russia")).toBeInTheDocument();
   });
 

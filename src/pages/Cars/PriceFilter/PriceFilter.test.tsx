@@ -18,33 +18,6 @@ describe("PriceFilter", () => {
     expect(maxPrice).toHaveValue("321");
   });
 
-  it("clears the inputs when the reset button is clicked", async () => {
-    renderRouteInAppContext("/cars");
-
-    const minPrice = await screen.findByTestId("min-price");
-    await userEvent.type(minPrice, "123");
-    const maxPrice = await screen.findByTestId("max-price");
-    await userEvent.type(maxPrice, "321");
-
-    await userEvent.click(screen.getByTestId("reset-price-filter"));
-
-    expect(minPrice).toHaveValue("");
-    expect(maxPrice).toHaveValue("");
-  });
-
-  it("swap the inputs when max price is lower than min price and input lose focused", async () => {
-    renderRouteInAppContext("/cars");
-
-    const minPrice = await screen.findByTestId("min-price");
-    await userEvent.type(minPrice, "321");
-    const maxPrice = await screen.findByTestId("max-price");
-    await userEvent.type(maxPrice, "123");
-    await userEvent.tab(); // unfocus the input
-
-    expect(minPrice).toHaveValue("123");
-    expect(maxPrice).toHaveValue("321");
-  });
-
   it("displays the lowest and highest price for minute as a placeholder when request succeeds", async () => {
     mockSuccessfulResponse("/api/lowestAndHighestPrice", {
       low: "0.45",
@@ -118,31 +91,21 @@ describe("PriceFilter", () => {
     });
   });
 
-  it("sets price to the lowest one when user enters a value lower than the lowest price and input loses focus", async () => {
-    mockSuccessfulResponse("/api/lowestAndHighestPrice", {
-      low: "0.45",
-      high: "1",
-    });
+  it("clears the min price input field when user clicks on the clear button", async () => {
     renderRouteInAppContext("/cars");
 
-    const minPrice = await screen.findByTestId("min-price");
-    await userEvent.type(minPrice, "0.44");
-    await userEvent.tab(); // unfocus the input
+    await userEvent.type(await screen.findByTestId("min-price"), "0.25");
+    await userEvent.click(screen.getByTestId("min-price-clear"));
 
-    expect(minPrice).toHaveValue("0.45");
+    expect(screen.getByTestId("min-price")).toHaveValue("");
   });
 
-  it("sets price to the highest one when user enters a value higher than the highest price and input loses focus", async () => {
-    mockSuccessfulResponse("/api/lowestAndHighestPrice", {
-      low: "0.45",
-      high: "1",
-    });
+  it("clears the max price input field when user clicks on the clear button", async () => {
     renderRouteInAppContext("/cars");
 
-    const maxPrice = await screen.findByTestId("max-price");
-    await userEvent.type(maxPrice, "1.01");
-    await userEvent.tab(); // unfocus the input
+    await userEvent.type(await screen.findByTestId("max-price"), "0.25");
+    await userEvent.click(screen.getByTestId("max-price-clear"));
 
-    expect(maxPrice).toHaveValue("1");
+    expect(screen.getByTestId("max-price")).toHaveValue("");
   });
 });

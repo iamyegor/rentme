@@ -6,8 +6,10 @@ export function appendSearchParams(
   setSearchParams: SetURLSearchParams,
 ) {
   setSearchParams((prevSearchParams) => {
-    for (const { key, value } of searchParams) {
-      prevSearchParams.set(key, value);
+    for (const param of searchParams) {
+      console.log(searchParams, prevSearchParams.toString());
+      const key = Object.keys(param)[0];
+      prevSearchParams.set(key, param[key]);
     }
     return prevSearchParams;
   });

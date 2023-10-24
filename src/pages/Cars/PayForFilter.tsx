@@ -1,7 +1,6 @@
 import { Select } from "@radix-ui/themes";
 import { PayFor } from "../../types.ts";
 import { useSearchParams } from "react-router-dom";
-import { appendSearchParam } from "../../utils/appendSearchParam.ts";
 import clock from "../../../assets/icons/clock.png";
 
 export default function PayForFilter() {
@@ -12,16 +11,12 @@ export default function PayForFilter() {
       <img className="filter-icon mr-2" src={clock} alt={""} />
       <div className="mr-2">Pay for</div>
       <Select.Root
-        defaultValue={searchParams.get("payFor") || PayFor.Minute}
-        onValueChange={(value: PayFor) =>
-          appendSearchParam(
-            {
-              key: "payFor",
-              value,
-            },
-            setSearchParams,
-          )
-        }
+        value={searchParams.get("payFor") || PayFor.Minute}
+        onValueChange={(value: PayFor) => {
+          localStorage.setItem("payFor", value);
+          searchParams.set("payFor", value);
+          setSearchParams(searchParams);
+        }}
       >
         <Select.Trigger
           color="green"

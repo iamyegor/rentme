@@ -6,17 +6,8 @@ import { describe, expect } from "vitest";
 import mockResponseWithParams from "../../../test/helpers/mockResponseWithParams.tsx";
 
 describe("CategoryFilter", () => {
-  it("displays only cars that correspond to the selected category when user selects category", async () => {
-    mockResponseWithParams(
-      [
-        {
-          key: "category",
-          value: "economy",
-        },
-      ],
-      [carsFixture[0]],
-      [],
-    );
+  it("displays only cars that correspond with the selected category when user selects category", async () => {
+    mockResponseWithParams([{ category: "economy" }], [carsFixture[0]], []);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
