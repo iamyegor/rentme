@@ -1,47 +1,49 @@
-import React from "react";
-import {Await, defer, Link, useLoaderData} from "react-router-dom";
-import { store } from "../../../app/store.ts";
-import AsyncErrorPage from "../../../components/AsyncErrorPage.tsx";
-import { Car } from "../../../types.ts";
-import { getCarsByParamsInitiate } from "../../../features/api/apiSlice.ts";
+import { ReactNode } from "react";
 import CarsGrid from "../CarsGrid.tsx";
 import PayForFilter from "../PayForFilter.tsx";
 import LocationFilter from "../LocationFilter/LocationFilter.tsx";
 import CategoryFilter from "../CategoryFilter/CategoryFilter.tsx";
 import PriceFilter from "../PriceFilter/PriceFilter.tsx";
-
-export async function loader({ request }: { request: any }) {
-  const carsPromise = store.dispatch(
-    getCarsByParamsInitiate(new URL(request.url).searchParams.toString()),
-  );
-
-  carsPromise.unsubscribe();
-  return defer({
-    carsPromise: carsPromise.unwrap(),
-  });
-}
+import { useGetCarsByParamsQuery } from "../../../features/api/apiSlice.ts";
+import { useSearchParams } from "react-router-dom";
+import ErrorPage from "../../../components/ErrorPage.tsx";
+import Spinner from "../../../components/Spinner.tsx";
+import CarsNotFound from "../../../components/CarNotFound.tsx";
 
 export default function CarsPage() {
-  const { carsPromise } = useLoaderData() as {
-    carsPromise: Promise<Car[]>;
-  };
+  const [searchParams, _setSearchParams] = useSearchParams();
+  const {
+    data: cars = [],
+    error,
+    isFetching,
+  } = useGetCarsByParamsQuery(searchParams.toString());
+
+  let content: ReactNode;
+  if (error) {
+    if ("data" in error) {
+      content = (
+        <ErrorPage
+          error={{ status: error.status, data: error.data as string }}
+        />
+      );
+    }
+  } else if (isFetching) {
+    content = <Spinner />;
+  } else if (cars.length === 0) {
+    content = <CarsNotFound />;
+  } else if (cars) {
+    content = <CarsGrid cars={cars} />;
+  }
 
   return (
     <main className="flex flex-col items-center" data-testid="cars-page">
-      <React.Suspense
-        fallback={<div data-testid="spinner">Loading 1234556...</div>}
-      >
-        <div className="my-4 flex justify-center items-center space-x-4 w-full">
-          <Link to={`.?payFor=min`} >Link</Link>
-          <CategoryFilter />
-          <LocationFilter />
-          <PayForFilter />
-          <PriceFilter />
-        </div>
-        <Await resolve={carsPromise} errorElement={<AsyncErrorPage />}>
-          {(cars) => <CarsGrid cars={cars} />}
-        </Await>
-      </React.Suspense>
+      <div className="my-4 flex justify-center items-center space-x-4 w-full">
+        <CategoryFilter />
+        <LocationFilter />
+        <PayForFilter />
+        <PriceFilter />
+      </div>
+      {content}
     </main>
   );
 }

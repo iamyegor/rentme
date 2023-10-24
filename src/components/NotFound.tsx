@@ -1,14 +1,14 @@
-import Error from "./Error";
+import ErrorPage from "./ErrorPage.tsx";
 
 export default function NotFound() {
   const error = {
     status: 404,
-    message: "Not Found",
+    data: "Not Found",
   };
 
   return (
     <main data-testid="not-found-page" className="flex-1">
-      <Error error={error} />
+      <ErrorPage error={error} />
     </main>
   );
 }

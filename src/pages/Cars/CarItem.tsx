@@ -17,7 +17,7 @@ export default function CarItem({ car }: CarItemProps) {
 
   return (
     <div
-      className="bg-[#f5f6f8] rounded-md h-[250px] w-[400px] 
+      className="bg-gray-100/50 rounded-md h-[250px] w-[400px] 
       flex flex-col justify-between items-center box-border pt-10 pb-8
       hover:scale-[1.02] transition-all duration-300 ease-in-out hover:cursor-pointer
       hover:shadow-lg shadow-sm hover:border hover:border-[#d1d1d1] relative 

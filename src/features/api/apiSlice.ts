@@ -20,6 +20,8 @@ export const apiSlice = createApi({
 });
 
 export const getCarsInitiate = apiSlice.endpoints.getCars.initiate;
+export const {useGetCarsByParamsQuery} = apiSlice;
+export const { useGetCarsQuery } = apiSlice;
 export const { useGetLocationsQuery } = apiSlice;
 export const { useGetLowestAndHighestPriceQuery } = apiSlice;
 export const getCarsByParamsInitiate =

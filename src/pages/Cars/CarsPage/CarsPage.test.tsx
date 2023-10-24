@@ -138,7 +138,7 @@ describe("CarsPage", () => {
       { timeout: 1500 },
     );
   });
-
+  
   it("displays appropriate cars when user clears min price using clear button", async () => {
     mockResponseWithParams(
       [{ minPrice: "0.5" }, { maxPrice: "1.5" }],

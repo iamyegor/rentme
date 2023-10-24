@@ -11,18 +11,12 @@ const NUMBER_DOT_REGEXP = /[^0-9.]/g;
 
 export default function PriceFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
-  // const otherSearchParams = Object.fromEntries(
-  //   [...searchParams.entries()].filter(
-  //     ([key]) => key !== "minPrice" && key !== "maxPrice",
-  //   ),
-  // );
   const [minPlaceholder, setMinPlaceholder] = useState("min price");
   const [maxPlaceholder, setMaxPlaceholder] = useState("max price");
   const { data, error } = useGetLowestAndHighestPriceQuery(
     searchParams.toString(),
   );
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
-  console.log(minPrice);
 
   const [maxPrice, setMaxPrice] = useState(
     () => searchParams.get("maxPrice") || "",
@@ -31,7 +25,6 @@ export default function PriceFilter() {
   const debouncedMinPriceChange = useCallback(
     debounce((minPrice: string) => {
       if (minPrice) {
-        console.log({ searchParams });
         searchParams.set("minPrice", minPrice);
         setSearchParams(searchParams);
       } else {
@@ -62,11 +55,6 @@ export default function PriceFilter() {
       setMaxPlaceholder("max price");
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   clearMinPrice();
-  //   clearMaxPrice();
-  // }, [JSON.stringify(otherSearchParams)]);
 
   function handleMinPriceChange(event: ChangeEvent<HTMLInputElement>) {
     const value = getActualInputValue(event.target.value);
