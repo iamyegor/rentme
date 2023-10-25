@@ -3,10 +3,9 @@ import mockFailedResponse from "../../../test/helpers/mockFailedResponse.tsx";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import waitToAppearByTestId from "../../../test/helpers/waitToAppearByTestId.tsx";
 import carsFixture from "../../../test/fixtures/carsFixture.ts";
-import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
 import { expect } from "vitest";
-import mockResponseWithParams from "../../../test/helpers/mockResponseWithParams.tsx";
 import userEvent from "@testing-library/user-event";
+import mockCarsResponseWithParams from "../../../test/helpers/mockCarsResponseWithParams.tsx";
 
 describe("CarsPage", () => {
   it("displays cars list once loaded", async () => {
@@ -45,7 +44,6 @@ describe("CarsPage", () => {
   });
 
   it("displays proper car prices when user selects a pay for hour option", async () => {
-    mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("pay-for-dropdown"));
@@ -57,7 +55,7 @@ describe("CarsPage", () => {
     expect(screen.getAllByTestId("car-price")[1]).toHaveTextContent("$60");
   });
   it("displays cars for the selected location, when user selects location", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ city: "Moscow" }, { country: "Russia" }],
       [carsFixture[0]],
       carsFixture,
@@ -73,7 +71,7 @@ describe("CarsPage", () => {
   });
 
   it("properly displays cars when both category and location are selected", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ city: "Moscow" }, { country: "Russia" }, { category: "premium" }],
       [],
       carsFixture,
@@ -100,7 +98,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars with price of specified range for minute", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "0.40" }, { maxPrice: "0.50" }],
       [carsFixture[0]],
       carsFixture,
@@ -117,7 +115,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars with price of specified range for hour", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "50" }, { maxPrice: "65" }],
       [carsFixture[1]],
       carsFixture,
@@ -140,7 +138,7 @@ describe("CarsPage", () => {
   });
 
   it("displays appropriate cars when user clears min price using clear button", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "0.5" }, { maxPrice: "1.5" }],
       [carsFixture[1]],
       carsFixture,
@@ -158,7 +156,7 @@ describe("CarsPage", () => {
   });
 
   it("displays appropriate cars when user clears max price using clear button", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "0.5" }, { maxPrice: "1.5" }],
       [carsFixture[1]],
       carsFixture,
@@ -176,7 +174,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars not found when there are no cars corresponding with the min price filter", async () => {
-    mockResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
+    mockCarsResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
     renderRouteInAppContext("/cars");
 
     await userEvent.type(await screen.findByTestId("min-price"), "1234");
@@ -187,7 +185,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars not found when there are no cars corresponding with the max price filter", async () => {
-    mockResponseWithParams([{ maxPrice: "0.1" }], [], carsFixture);
+    mockCarsResponseWithParams([{ maxPrice: "0.1" }], [], carsFixture);
     renderRouteInAppContext("/cars");
 
     await userEvent.type(await screen.findByTestId("max-price"), "0.1");
@@ -198,7 +196,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars not found when there are no cars corresponding with the min and max price filters", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "1" }, { maxPrice: "2" }],
       [],
       carsFixture,
@@ -214,7 +212,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars not found when there are no cars corresponding with the location filter", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [
         {
           city: "Moscow",
@@ -235,7 +233,7 @@ describe("CarsPage", () => {
   });
 
   it("displays cars not found when there are no cars corresponding with the category filter", async () => {
-    mockResponseWithParams([{ category: "premium" }], [], carsFixture);
+    mockCarsResponseWithParams([{ category: "premium" }], [], carsFixture);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
@@ -247,7 +245,7 @@ describe("CarsPage", () => {
   });
 
   it("resets price filters when user clicks reset button on CarsNotFound page", async () => {
-    mockResponseWithParams(
+    mockCarsResponseWithParams(
       [{ minPrice: "1" }, { maxPrice: "2" }],
       [],
       carsFixture,
@@ -267,7 +265,7 @@ describe("CarsPage", () => {
   });
 
   it("resets category filter when user clicks reset button on CarsNotFound page", async () => {
-    mockResponseWithParams([{ category: "premium" }], [], carsFixture);
+    mockCarsResponseWithParams([{ category: "premium" }], [], carsFixture);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
@@ -281,7 +279,7 @@ describe("CarsPage", () => {
   });
 
   it("doesn't reset payFor filter when user clicks on reset filters button on CarsNotFound page", async () => {
-    mockResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
+    mockCarsResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
     renderRouteInAppContext("/cars");
 
     const payForDropdown = await screen.findByTestId("pay-for-dropdown");
@@ -295,3 +293,4 @@ describe("CarsPage", () => {
     });
   });
 });
+

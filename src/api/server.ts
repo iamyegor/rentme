@@ -4,8 +4,19 @@ import { Car, Location, PayFor } from "../types.ts";
 
 const worker = setupWorker(
   rest.get("http://localhost/api/cars", (req, res, ctx) => {
-    const filteredCars = filterCars(cars, req.url.searchParams);
-    return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(150));
+    const filteredCars = getFilteredCars(cars, req.url.searchParams);
+    const response: any = {
+      cars: filteredCars,
+    };
+
+    if (filteredCars.length > 0) {
+      const prices = filteredCars.map((car) => car.minutePriceCents / 100);
+      response.prices = {
+        min: Math.min(...prices),
+        max: Math.max(...prices),
+      };
+    }
+    return res(ctx.status(200), ctx.json(response), ctx.delay(1000));
     // return res(ctx.status(500), ctx.json("An error occurred"), ctx.delay(150));
   }),
 
@@ -15,11 +26,11 @@ const worker = setupWorker(
       locations.push(car.location);
     }
 
-    return res(ctx.status(200), ctx.json(locations), ctx.delay(150));
+    return res(ctx.status(200), ctx.json(locations), ctx.delay(1000));
   }),
 
   rest.get("http://localhost/api/lowestAndHighestPrice", (req, res, ctx) => {
-    const filteredCars = filterCars(cars, req.url.searchParams);
+    const filteredCars = getFilteredCars(cars, req.url.searchParams);
     const prices = filteredCars.map((car) => car.minutePriceCents / 100);
     let low = Math.min(...prices);
     let high = Math.max(...prices);
@@ -28,11 +39,11 @@ const worker = setupWorker(
       high = high * 60;
     }
 
-    return res(ctx.status(200), ctx.json({ low, high }), ctx.delay(150));
+    return res(ctx.status(200), ctx.json({ low, high }), ctx.delay(1000));
   }),
 );
 
-function filterCars(cars: Car[], searchParams: URLSearchParams) {
+function getFilteredCars(cars: Car[], searchParams: URLSearchParams) {
   const city = searchParams.get("city");
   const country = searchParams.get("country");
   const category = searchParams.get("category");

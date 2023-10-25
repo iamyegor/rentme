@@ -12,11 +12,9 @@ import CarsNotFound from "../../../components/CarsNotFound.tsx";
 
 export default function CarsPage() {
   const [searchParams, _setSearchParams] = useSearchParams();
-  const {
-    data: cars = [],
-    error,
-    isFetching,
-  } = useGetCarsByParamsQuery(searchParams.toString());
+  const { data, error, isFetching } = useGetCarsByParamsQuery(
+    searchParams.toString(),
+  );
 
   let content: ReactNode;
   if (error) {
@@ -29,10 +27,10 @@ export default function CarsPage() {
     }
   } else if (isFetching) {
     content = <Spinner />;
-  } else if (cars.length === 0) {
+  } else if (data?.cars.length === 0) {
     content = <CarsNotFound />;
-  } else if (cars) {
-    content = <CarsGrid cars={cars} />;
+  } else if (data?.cars) {
+    content = <CarsGrid cars={data.cars} />;
   }
 
   return (
@@ -41,7 +39,7 @@ export default function CarsPage() {
         <CategoryFilter />
         <LocationFilter />
         <PayForFilter />
-        <PriceFilter />
+        <PriceFilter prices={data?.prices} />
       </div>
       {content}
     </main>

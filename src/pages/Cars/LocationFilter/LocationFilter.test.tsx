@@ -1,13 +1,10 @@
 ﻿import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
-import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
-import carsFixture from "../../../test/fixtures/carsFixture.ts";
 import { expect } from "vitest";
 
 describe("LocationFilter", () => {
   it("displays only cities and countries that have available cars", async () => {
-    mockSuccessfulResponse("/api/cars", carsFixture);
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
@@ -32,7 +29,7 @@ describe("LocationFilter", () => {
     const moscow = await screen.findByText("Moscow");
     await userEvent.click(moscow);
 
-    screen.debug()
+    screen.debug();
     expect(await screen.findByText("Moscow, Russia")).toBeInTheDocument();
   });
 

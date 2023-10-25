@@ -1,19 +1,25 @@
 ﻿import { useSearchParams } from "react-router-dom";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useGetLowestAndHighestPriceQuery } from "../../../features/api/apiSlice.ts";
 import "./price-filter.css";
 import { debounce } from "lodash";
 import close from "../../../../assets/icons/cross.png";
+import { PayFor } from "../../../types.ts";
 
 const NUMBER_DOT_REGEXP = /[^0-9.]/g;
 
-export default function PriceFilter() {
+type PriceFilterProps = {
+  prices:
+    | {
+        min: number;
+        max: number;
+      }
+    | undefined;
+};
+
+export default function PriceFilter({ prices }: PriceFilterProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [minPlaceholder, setMinPlaceholder] = useState("min price");
   const [maxPlaceholder, setMaxPlaceholder] = useState("max price");
-  const { data, error } = useGetLowestAndHighestPriceQuery(
-    searchParams.toString(),
-  );
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
   const [debouncedMinPrice, setDebouncedMinPrice] = useState(minPrice);
@@ -34,22 +40,27 @@ export default function PriceFilter() {
   );
 
   useEffect(() => {
-    setMinPrice(searchParams.get("minPrice") || "");
-  }, [searchParams.get("minPrice")]);
-  
-  useEffect(() => {
-    setMaxPrice(searchParams.get("maxPrice") || "");
-  }, [searchParams.get("maxPrice")]);
-
-  useEffect(() => {
-    if (data?.low && data?.high && !error) {
-      setMinPlaceholder(`from ${data.low}`);
-      setMaxPlaceholder(`to ${data.high}`);
+    if (prices) {
+      if (searchParams.get("payFor") === PayFor.Hour) {
+        setMinPlaceholder(`from ${prices.min * 60}`);
+        setMaxPlaceholder(`to ${prices.max * 60}`);
+      } else {
+        setMinPlaceholder(`from ${prices.min}`);
+        setMaxPlaceholder(`to ${prices.max}`);
+      }
     } else {
       setMinPlaceholder("min price");
       setMaxPlaceholder("max price");
     }
-  }, [data]);
+  }, [prices, searchParams.get("payFor")]);
+
+  useEffect(() => {
+    setMinPrice(searchParams.get("minPrice") || "");
+  }, [searchParams.get("minPrice")]);
+
+  useEffect(() => {
+    setMaxPrice(searchParams.get("maxPrice") || "");
+  }, [searchParams.get("maxPrice")]);
 
   useEffect(() => {
     if (debouncedMinPrice) {

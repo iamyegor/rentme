@@ -18,7 +18,7 @@ beforeEach(() => {
     "/api/locations",
     carsFixture.map((car) => car.location),
   );
-  mockSuccessfulResponse("/api/cars", carsFixture);
+  mockSuccessfulResponse("/api/cars", {cars: carsFixture});
   mockSuccessfulResponse("/api/lowestAndHighestPrice", {});
 });
 
