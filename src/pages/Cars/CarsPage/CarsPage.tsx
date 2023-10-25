@@ -8,7 +8,7 @@ import { useGetCarsByParamsQuery } from "../../../features/api/apiSlice.ts";
 import { useSearchParams } from "react-router-dom";
 import ErrorPage from "../../../components/ErrorPage.tsx";
 import Spinner from "../../../components/Spinner.tsx";
-import CarsNotFound from "../../../components/CarNotFound.tsx";
+import CarsNotFound from "../../../components/CarsNotFound.tsx";
 
 export default function CarsPage() {
   const [searchParams, _setSearchParams] = useSearchParams();

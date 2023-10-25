@@ -5,7 +5,7 @@ import { Car, Location, PayFor } from "../types.ts";
 const worker = setupWorker(
   rest.get("http://localhost/api/cars", (req, res, ctx) => {
     const filteredCars = filterCars(cars, req.url.searchParams);
-    return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(1000));
+    return res(ctx.status(200), ctx.json(filteredCars), ctx.delay(150));
     // return res(ctx.status(500), ctx.json("An error occurred"), ctx.delay(150));
   }),
 
@@ -15,7 +15,7 @@ const worker = setupWorker(
       locations.push(car.location);
     }
 
-    return res(ctx.status(200), ctx.json(locations), ctx.delay(1000));
+    return res(ctx.status(200), ctx.json(locations), ctx.delay(150));
   }),
 
   rest.get("http://localhost/api/lowestAndHighestPrice", (req, res, ctx) => {
@@ -28,7 +28,7 @@ const worker = setupWorker(
       high = high * 60;
     }
 
-    return res(ctx.status(200), ctx.json({ low, high }), ctx.delay(1000));
+    return res(ctx.status(200), ctx.json({ low, high }), ctx.delay(150));
   }),
 );
 

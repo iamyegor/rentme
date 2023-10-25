@@ -138,7 +138,7 @@ describe("CarsPage", () => {
       { timeout: 1500 },
     );
   });
-  
+
   it("displays appropriate cars when user clears min price using clear button", async () => {
     mockResponseWithParams(
       [{ minPrice: "0.5" }, { maxPrice: "1.5" }],
@@ -172,6 +172,126 @@ describe("CarsPage", () => {
 
     await waitFor(() => {
       expect(screen.getAllByTestId("car-item").length).toBe(2);
+    });
+  });
+
+  it("displays cars not found when there are no cars corresponding with the min price filter", async () => {
+    mockResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "1234");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cars-not-found-page")).toBeInTheDocument();
+    });
+  });
+
+  it("displays cars not found when there are no cars corresponding with the max price filter", async () => {
+    mockResponseWithParams([{ maxPrice: "0.1" }], [], carsFixture);
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("max-price"), "0.1");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cars-not-found-page")).toBeInTheDocument();
+    });
+  });
+
+  it("displays cars not found when there are no cars corresponding with the min and max price filters", async () => {
+    mockResponseWithParams(
+      [{ minPrice: "1" }, { maxPrice: "2" }],
+      [],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "1");
+    await userEvent.type(screen.getByTestId("max-price"), "2");
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cars-not-found-page")).toBeInTheDocument();
+    });
+  });
+
+  it("displays cars not found when there are no cars corresponding with the location filter", async () => {
+    mockResponseWithParams(
+      [
+        {
+          city: "Moscow",
+          country: "Russia",
+        },
+      ],
+      [],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("select-location-button"));
+    await userEvent.click(await screen.findByText(/moscow/i));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cars-not-found-page")).toBeInTheDocument();
+    });
+  });
+
+  it("displays cars not found when there are no cars corresponding with the category filter", async () => {
+    mockResponseWithParams([{ category: "premium" }], [], carsFixture);
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /premium/i }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("cars-not-found-page")).toBeInTheDocument();
+    });
+  });
+
+  it("resets price filters when user clicks reset button on CarsNotFound page", async () => {
+    mockResponseWithParams(
+      [{ minPrice: "1" }, { maxPrice: "2" }],
+      [],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    const minPriceInput = await screen.findByTestId("min-price");
+    await userEvent.type(minPriceInput, "1");
+
+    const maxPriceInput = await screen.findByTestId("max-price");
+    await userEvent.type(maxPriceInput, "2");
+
+    await userEvent.click(await screen.findByTestId("reset-filters"));
+
+    expect(minPriceInput).toHaveValue("");
+    expect(maxPriceInput).toHaveValue("");
+  });
+
+  it("resets category filter when user clicks reset button on CarsNotFound page", async () => {
+    mockResponseWithParams([{ category: "premium" }], [], carsFixture);
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /premium/i }));
+
+    await userEvent.click(await screen.findByTestId("reset-filters"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("category-dropdown")).toHaveTextContent("All");
+    });
+  });
+
+  it("doesn't reset payFor filter when user clicks on reset filters button on CarsNotFound page", async () => {
+    mockResponseWithParams([{ minPrice: "1234" }], [], carsFixture);
+    renderRouteInAppContext("/cars");
+
+    const payForDropdown = await screen.findByTestId("pay-for-dropdown");
+    await userEvent.click(payForDropdown);
+    await userEvent.click(screen.getByRole("option", { name: /hour/i }));
+    await userEvent.type(await screen.findByTestId("min-price"), "1234");
+    await userEvent.click(await screen.findByTestId("reset-filters"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("pay-for-dropdown")).toHaveTextContent("Hour");
     });
   });
 });
