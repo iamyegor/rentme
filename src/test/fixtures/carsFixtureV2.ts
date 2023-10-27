@@ -102,8 +102,6 @@ const carsFixtureV2: Car[] = [
   },
 ];
 
-export default carsFixtureV2;
-
 export function getCarsFixture() {
   return carsFixtureV2.sort((a, b) => a.id.localeCompare(b.id));
 }
