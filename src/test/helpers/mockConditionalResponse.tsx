@@ -1,11 +1,11 @@
-﻿import { server } from "../setup.ts";
+﻿import { server } from "../setup.js";
 import { rest } from "msw";
-import { SearchParam } from "../../types.ts";
+import { SearchParam } from "../../types.js";
 
-export default function mockResponseWithParams(
+export default function mockConditionalResponse(
   params: SearchParam[],
   resolvedValue: any,
-  alternativeValue: any = {},
+  alternativeValue: any = {}
 ) {
   server.use(
     rest.get("http://localhost/api/cars", (req, res, ctx) => {
@@ -15,10 +15,10 @@ export default function mockResponseWithParams(
       });
 
       if (allTrue) {
-        return res(ctx.json(resolvedValue));
+        return res(ctx.json({ cars: resolvedValue }));
       } else {
-        return res(ctx.json(alternativeValue));
+        return res(ctx.json({ cars: alternativeValue }));
       }
-    }),
+    })
   );
 }

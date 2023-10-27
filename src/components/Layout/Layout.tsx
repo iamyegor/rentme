@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import "./Layout.css";
+import "./layout.css";
 
 export default function Layout() {
   return (

@@ -12,8 +12,8 @@ type CarsResponse = {
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost/api" }),
   endpoints: (builder) => ({
-    getCarsByParams: builder.query<CarsResponse, string>({
-      query: (paramsString) => `/cars?${paramsString}`,
+    getCarsByParams: builder.query<CarsResponse, { searchParams: string }>({
+      query: ({searchParams}) => `/cars?${searchParams}`,
     }),
     getLocations: builder.query<Location[], void>({
       query: () => `/locations`,
@@ -21,5 +21,5 @@ export const apiSlice = createApi({
   }),
 });
 
-export const {useGetCarsByParamsQuery} = apiSlice;
+export const { useGetCarsByParamsQuery } = apiSlice;
 export const { useGetLocationsQuery } = apiSlice;

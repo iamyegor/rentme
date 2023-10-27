@@ -39,3 +39,9 @@ export type LowHighPrices = {
   low: number;
   high: number;
 }
+
+export enum SortBy {
+  Price = "price",
+  Name = "name",
+  Popularity = "popularity"
+}

@@ -1,7 +1,7 @@
 import { rest } from "msw";
-import { server } from "../setup.ts";
+import { server } from "../setup.js";
 
-export default function mockSuccessfulResponse(
+export default function mockResponse(
   relativeUrl: string,
   fixtures: any
 ) {

@@ -3,11 +3,11 @@ import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppConte
 import userEvent from "@testing-library/user-event";
 import { screen, waitFor } from "@testing-library/react";
 import { describe, expect } from "vitest";
-import mockCarsResponseWithParams from "../../../test/helpers/mockCarsResponseWithParams.tsx";
+import mockConditionalResponse from "test/helpers/mockConditionalResponse.tsx";
 
 describe("CategoryFilter", () => {
   it("displays only cars that correspond with the selected category when user selects category", async () => {
-    mockCarsResponseWithParams([{ category: "economy" }], [carsFixture[0]], []);
+    mockConditionalResponse([{ category: "economy" }], [carsFixture[0]], []);
     renderRouteInAppContext("/cars");
 
     await userEvent.click(await screen.findByTestId("category-dropdown"));
@@ -20,7 +20,7 @@ describe("CategoryFilter", () => {
   });
 
   it("displays all cars when user selects all categories", async () => {
-    mockCarsResponseWithParams(
+    mockConditionalResponse(
       [{ category: "economy" }],
       [carsFixture[0]],
       carsFixture,

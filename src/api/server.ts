@@ -1,6 +1,6 @@
 import { rest, setupWorker } from "msw";
 import { cars } from "./data";
-import { Car, Location, PayFor } from "../types.ts";
+import { Car, Location, PayFor, SortBy } from "../types.ts";
 
 const worker = setupWorker(
   rest.get("http://localhost/api/cars", (req, res, ctx) => {
@@ -40,7 +40,7 @@ const worker = setupWorker(
     }
 
     return res(ctx.status(200), ctx.json({ low, high }), ctx.delay(1000));
-  }),
+  })
 );
 
 function getFilteredCars(cars: Car[], searchParams: URLSearchParams) {
@@ -50,8 +50,9 @@ function getFilteredCars(cars: Car[], searchParams: URLSearchParams) {
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
   const payFor = searchParams.get("payFor") || PayFor.Minute;
+  const sortBy = searchParams.get("sortBy");
 
-  let filteredCars = cars;
+  let filteredCars = cars.sort((a, b) => a.id.localeCompare(b.id));
   if (city && country) {
     filteredCars = cars.filter((car) => {
       return car.location.city === city && car.location.country === country;
@@ -73,6 +74,15 @@ function getFilteredCars(cars: Car[], searchParams: URLSearchParams) {
       const price = getPriceBasedOnPayFor(car.minutePriceCents / 100);
       return price <= Number(maxPrice);
     });
+  }
+  if (sortBy === SortBy.Price) {
+    filteredCars = filteredCars.sort(
+      (a, b) => a.minutePriceCents - b.minutePriceCents
+    );
+  } else if (sortBy === SortBy.Name) {
+    filteredCars = filteredCars.sort((a, b) =>
+      `${a.make} ${a.model}`.localeCompare(`${b.make} ${b.model}`)
+    );
   }
 
   function getPriceBasedOnPayFor(price: number) {

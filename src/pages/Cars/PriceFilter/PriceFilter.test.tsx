@@ -2,7 +2,7 @@
 import { screen, waitFor } from "@testing-library/react";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import userEvent from "@testing-library/user-event";
-import mockSuccessfulResponse from "../../../test/helpers/mockSuccessfulResponse.tsx";
+import mockResponse from "../../../test/helpers/mockResponse.tsx";
 
 describe("PriceFilter", () => {
   it("accepts only numbers for both inputs", async () => {
@@ -53,7 +53,7 @@ describe("PriceFilter", () => {
   });
 
   it("displays 'min price' and 'max price' as a placeholder when there are no cars", async () => {
-    mockSuccessfulResponse("/api/cars", { cars: [] });
+    mockResponse("/api/cars", { cars: [] });
     renderRouteInAppContext("/cars");
 
     await waitFor(() => {
@@ -88,7 +88,7 @@ describe("PriceFilter", () => {
 });
 
 function mockSuccessfulPricesResponse(min: string, max: string) {
-  mockSuccessfulResponse("/api/cars", {
+  mockResponse("/api/cars", {
     cars: [],
     prices: {
       min: min,

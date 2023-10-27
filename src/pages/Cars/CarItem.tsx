@@ -31,7 +31,10 @@ export default function CarItem({ car }: CarItemProps) {
         hover:scale-[1.05] transition-all duration-300"
       />
       <div className="flex justify-between items-center w-full pl-8 pr-8">
-        <div className="font-semibold text-lg max-w-[230px]">
+        <div
+          className="font-semibold text-lg max-w-[230px]"
+          data-testid="car-name"
+        >
           {car.make} {car.model}, {car.year}
         </div>
         <div>

@@ -8,7 +8,7 @@ describe("LocationFilter", () => {
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
-      "select-location-button",
+      "select-location-button"
     );
     await userEvent.click(selectLocationButton);
     const cities = await screen.findAllByTestId("city-item");
@@ -22,14 +22,13 @@ describe("LocationFilter", () => {
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
-      "select-location-button",
+      "select-location-button"
     );
     expect(screen.queryByText("Moscow, Russia")).toEqual(null);
     await userEvent.click(selectLocationButton);
     const moscow = await screen.findByText("Moscow");
     await userEvent.click(moscow);
 
-    screen.debug();
     expect(await screen.findByText("Moscow, Russia")).toBeInTheDocument();
   });
 
@@ -37,7 +36,7 @@ describe("LocationFilter", () => {
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
-      "select-location-button",
+      "select-location-button"
     );
     await userEvent.click(selectLocationButton);
     let moscow = await screen.findByText("Moscow");
@@ -55,7 +54,7 @@ describe("LocationFilter", () => {
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
-      "select-location-button",
+      "select-location-button"
     );
     await userEvent.click(selectLocationButton);
     const searchInput = await screen.findByTestId("search-input");
@@ -69,7 +68,7 @@ describe("LocationFilter", () => {
     renderRouteInAppContext("/cars");
 
     const selectLocationButton = await screen.findByTestId(
-      "select-location-button",
+      "select-location-button"
     );
     await userEvent.click(selectLocationButton);
     const searchInput = await screen.findByTestId("search-input");
