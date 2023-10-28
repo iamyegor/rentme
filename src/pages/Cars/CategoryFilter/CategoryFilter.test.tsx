@@ -36,4 +36,21 @@ describe("CategoryFilter", () => {
       expect(screen.getAllByTestId("car-item").length).toBe(2),
     );
   });
+
+  it("resets category filter when clear filters button is clicked", async () => {
+    mockConditionalResponse(
+      [{ category: "economy" }],
+      [carsFixture[0]],
+      carsFixture,
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.click(await screen.findByTestId("category-dropdown"));
+    await userEvent.click(screen.getByRole("option", { name: /economy/i }));
+    await userEvent.click(await screen.findByTestId("clear-filters"));
+
+    expect(await screen.findByTestId("category-dropdown")).toHaveTextContent(
+      /all/i,
+    );
+  });
 });

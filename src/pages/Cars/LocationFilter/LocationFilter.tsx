@@ -54,7 +54,7 @@ export default function LocationFilter() {
   }
 
   function groupByCountry() {
-    return locations.reduce((result, {country, city}) => {
+    return locations.reduce((result, { country, city }) => {
       (result[country] = result[country] || []).push(city);
       return result;
     }, {} as GroupedLocations);
@@ -87,7 +87,7 @@ export default function LocationFilter() {
           <img className="filter-icon" src={pin} alt={""} />
           {displayedCity && displayedCountry
             ? `${displayedCity}, ${displayedCountry}`
-            : "Choose location"}
+            : "Location"}
         </Button>
       </Dialog.Trigger>
 

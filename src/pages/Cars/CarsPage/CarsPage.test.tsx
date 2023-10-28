@@ -1,6 +1,6 @@
 ﻿import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import carsFixtureV2, { getCarsFixture } from "test/fixtures/carsFixtureV2.ts";
+import { getCarsFixture } from "test/fixtures/carsFixtureV2.ts";
 import { expect } from "vitest";
 import carsFixture from "../../../test/fixtures/carsFixture.ts";
 import mockConditionalResponse from "test/helpers/mockConditionalResponse.tsx";
@@ -355,6 +355,24 @@ describe("CarsPage", () => {
       expect(carNames[1]).toHaveTextContent("Tesla S, 2019");
       expect(carNames[2]).toHaveTextContent("BMW X5, 2020");
       expect(carNames[3]).toHaveTextContent("Nissan Sentra, 2020");
+    });
+  });
+
+  it("displays all cars when user clicks clear filter button", async () => {
+    mockConditionalResponse(
+      [{ minPrice: "1" }, { maxPrice: "2" }],
+      getCarsFixture()[0],
+      getCarsFixture(),
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "1");
+    await userEvent.type(screen.getByTestId("max-price"), "2");
+
+    await userEvent.click(screen.getByTestId("clear-filters"));
+
+    await waitFor(() => {
+      expect(screen.getAllByTestId("car-item").length).toBe(7);
     });
   });
 });

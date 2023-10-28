@@ -3,6 +3,8 @@ import { screen, waitFor } from "@testing-library/react";
 import renderRouteInAppContext from "../../../test/helpers/renderRouteInAppContext.tsx";
 import userEvent from "@testing-library/user-event";
 import mockResponse from "../../../test/helpers/mockResponse.tsx";
+import mockConditionalResponse from "../../../test/helpers/mockConditionalResponse.tsx";
+import { getCarsFixture } from "../../../test/fixtures/carsFixtureV2.ts";
 
 describe("PriceFilter", () => {
   it("accepts only numbers for both inputs", async () => {
@@ -84,6 +86,28 @@ describe("PriceFilter", () => {
     await userEvent.click(screen.getByTestId("max-price-clear"));
 
     expect(screen.getByTestId("max-price")).toHaveValue("");
+  });
+
+  it("clears the min and max price inputs when clear filters button is clicked", async () => {
+    mockConditionalResponse(
+      [{ minPrice: "0.25" }, { maxPrice: "0.25" }],
+      [getCarsFixture()[0]],
+      getCarsFixture(),
+    );
+    renderRouteInAppContext("/cars");
+
+    await userEvent.type(await screen.findByTestId("min-price"), "0.25");
+    await userEvent.type(await screen.findByTestId("max-price"), "0.25");
+    await waitFor(() =>
+      expect(screen.getAllByTestId("car-item").length).toBe(1),
+    );
+
+    await userEvent.click(screen.getByTestId("clear-filters"));
+
+    await waitFor(() => {
+      expect(screen.getByTestId("min-price")).toHaveValue("");
+      expect(screen.getByTestId("max-price")).toHaveValue("");
+    });
   });
 });
 

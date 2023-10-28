@@ -9,9 +9,10 @@ import { useGetCarsByParamsQuery } from "../../../features/api/apiSlice.ts";
 import CarsGrid from "../CarsGrid.tsx";
 import CategoryFilter from "../CategoryFilter/CategoryFilter.tsx";
 import LocationFilter from "../LocationFilter/LocationFilter.tsx";
-import PayForFilter from "../PayForFilter.tsx";
+import PayForFilter from "../PayForFilter/PayForFilter.tsx";
 import PriceFilter from "../PriceFilter/PriceFilter.tsx";
 import SortByFilter from "../SortByFilter.tsx";
+import ClearFilterButton from "../ClearFilterButton.tsx";
 
 export default function CarsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,6 +47,7 @@ export default function CarsPage() {
   return (
     <main className="flex flex-col items-center" data-testid="cars-page">
       <div className="my-4 flex justify-center items-center space-x-4 w-full">
+        <ClearFilterButton />
         <SortByFilter />
         <CategoryFilter />
         <LocationFilter />

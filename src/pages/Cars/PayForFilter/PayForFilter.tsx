@@ -1,7 +1,7 @@
 import { Select } from "@radix-ui/themes";
-import { PayFor } from "../../types.ts";
+import { PayFor } from "../../../types.ts";
 import { useSearchParams } from "react-router-dom";
-import clock from "../../../assets/icons/clock.png";
+import clock from "../../../../assets/icons/clock.png";
 
 export default function PayForFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
